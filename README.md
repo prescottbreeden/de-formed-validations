@@ -2,7 +2,7 @@
 
 De-Formed Validations is an unopinionated API to manage form and data validations in JavaScript.
 
-De-Formed takes a simple schema definition and then provides you with either a JavaScript object containing read-only objects and functions to handle validation-related tasks. Just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (browser- or server-side). Very little attempt has been made to abstract the implementation of this API from the developer giving it a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
+De-Formed takes a simple schema definition and then provides you with a JavaScript object containing read-only objects and functions to handle validation-related tasks. Just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (browser- or server-side). Very little attempt has been made to abstract the implementation of this API from the developer giving it a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
 
 ## Why use De-Formed?
 
