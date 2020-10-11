@@ -45,7 +45,7 @@ export const PersonValidation = () => {
 };
 ```
 
-## Step 2: Plug and Play
+### Step 2: Plug and Play
 
 ```tsx
 export const PersonForm = ({ person, onChange }) => {
