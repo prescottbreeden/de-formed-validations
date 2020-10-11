@@ -3,8 +3,8 @@
   "description": "Suckless Validations for JavaScript Projects",
   "author": "Cluck Norris",
   "version": "1.0.0",
-  "main": "./dist/validations.js",
-  "types": "./src/validations.d.ts",
+  "main": "dist/index",
+  "types": "src/index.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "tsc",

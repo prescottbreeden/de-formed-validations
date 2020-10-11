@@ -1,5 +1,5 @@
 import { all, compose, map, prop } from './utilities';
-import { CustomValidation, ValidationSchema, ValidationState } from './validations.d';
+import { CustomValidation, ValidationSchema, ValidationState } from './index.d';
 
 
 export class Validation<S> {
