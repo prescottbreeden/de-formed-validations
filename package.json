@@ -1,0 +1,20 @@
+{
+  "name": "@de-formed/validations",
+  "description": "Suckless Validations for JavaScript Projects",
+  "author": "Cluck Norris",
+  "version": "1.0.0",
+  "main": "./dist/validations.js",
+  "types": "./src/validations.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^26.0.14",
+    "jest": "^26.5.3",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  }
+}
