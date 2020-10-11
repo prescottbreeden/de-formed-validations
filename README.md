@@ -10,7 +10,7 @@ De-Formed takes a simple schema definition and then provides you with a JavaScri
 2. Easily customize validation behavior in contextual and dynamic situations.
 3. Modular approach makes reusing and nested validations a snap.
 4. Framework agnostic (React, Angular, Vue, Node, Vanilla, etc., just plug and play).
-5. Light-weight (9.9KB package size) and easy to test.
+5. Light-weight (50 kB unpacked) and easy to test.
 
 ## Install
 ```
