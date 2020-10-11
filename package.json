@@ -2,7 +2,7 @@
   "name": "de-formed-validations",
   "description": "Suckless Validations for JavaScript Projects",
   "author": "Cluck Norris",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index",
   "license": "MIT",
   "scripts": {
