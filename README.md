@@ -90,7 +90,7 @@ export const PersonForm = ({ person, onChange }) => {
 
 ## Documentation
 
-Check out our [documentation](https://github.com/prescottbreeden/de-formed-validations/wiki/Docs) in full.
+Check out the [documentation](https://github.com/prescottbreeden/de-formed-validations/wiki/Docs).
 
 ## Examples
 
