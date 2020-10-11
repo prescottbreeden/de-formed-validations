@@ -12,6 +12,13 @@ De-Formed takes a simple schema definition and then provides you with a JavaScri
 4. Framework agnostic (React, Angular, Vue, Node, Vanilla, etc., just plug and play).
 5. Light-weight (9.9KB package size) and easy to test.
 
+## Install
+```
+yarn add de-formed-validations
+```
+```
+npm install de-formed-validations
+```
 ## Usage
 
 ### Step 1: Create a file to define your validations.
