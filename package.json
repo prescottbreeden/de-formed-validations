@@ -2,18 +2,38 @@
   "name": "de-formed-validations",
   "description": "Suckless Validations for JavaScript Projects",
   "author": "Cluck Norris",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/index",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "test": "jest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/react": "^16.9.52",
+    "react": "^16.13.1"
+  },
   "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^3.4.1",
+    "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^26.0.14",
+    "@types/testing-library__dom": "^7.5.0",
     "jest": "^26.5.3",
+    "react-test-renderer": "^16.13.1",
     "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   }
 }
