@@ -9,8 +9,7 @@ De-Formed takes a simple schema definition and then provides you with a JavaScri
 1. Maintain separation between your validation logic and your form logic, presentation logic, and/or server logic.
 2. Easily customize validation behavior in contextual and dynamic situations.
 3. Modular approach makes reusing and nested validations a snap.
-4. Framework agnostic (React, Angular, Vue, Node, Vanilla, etc., just plug and play).
-5. Light-weight (50 kB unpacked) and easy to test.
+4. Light-weight and easy to test.
 
 ## Install
 ```
@@ -27,8 +26,12 @@ To avoid unnecessary complexity, use the property names of the object you want t
 
 ```ts
 export const PersonValidation = () => {
-  return new Validation<Person>({
+  return useValidation<Person>({
     firstName: [
+      {
+        errorMessage: 'First Name is required.',
+        validation: (val: string) => val.length > 0,
+      },
       {
         errorMessage: 'First Name cannot be longer than 20 characters.',
         validation: (val: string) => val.length <= 20,
@@ -36,16 +39,20 @@ export const PersonValidation = () => {
     ],
     lastName: [
       {
+        errorMessage: 'Last Name is required.',
+        validation: (val: string) => val.length > 0,
+      },
+      {
+        errorMessage: 'Last Name cannot be longer than 20 characters.',
+        validation: (val: string) => val.length <= 20,
+      },
+      {
         errorMessage: 'Must be Ross if fist name is Bob.',
         validation: (val: string, state: Dog) => {
           return state.name.toLowerCase() === 'bob'
             ? val.toLowerCase() === 'ross'
             : true;
         },
-      },
-      {
-        errorMessage: 'Last Name cannot be longer than 20 characters.',
-        validation: (val: string) => val.length <= 20,
       },
     ],
   });
@@ -64,7 +71,9 @@ export const PersonForm = ({ person, onChange }) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const canSubmit = v.validateAll(person);
-    console.log('canSubmit', canSubmit);
+    if (canSubmit) {
+      // submit logic
+    }
   };
 
   return (
