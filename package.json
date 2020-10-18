@@ -1,8 +1,8 @@
 {
   "name": "de-formed-validations",
   "description": "fullstack modular validations",
-  "author": "Cluck Norris",
-  "version": "1.0.8",
+  "author": "Prescott Breeden",
+  "version": "1.0.9",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
