@@ -22,6 +22,7 @@ export interface ValidationObject<S> {
   getError: (property: keyof S) => string;
   getFieldValid: (property: keyof S) => boolean;
   isValid: boolean;
+  resetValidationState: () => void;
   validate: (
     property: keyof S,
     value: unknown,

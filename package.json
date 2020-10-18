@@ -2,7 +2,7 @@
   "name": "de-formed-validations",
   "description": "fullstack modular validations",
   "author": "Cluck Norris",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
