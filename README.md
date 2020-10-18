@@ -61,6 +61,7 @@ export const PersonValidation = () => {
 
 ### Step 2: Plug and Play
 
+####React Hook with controlled input example
 ```tsx
 export const PersonForm = ({ person, onChange }) => {
   const v = PersonValidation();
