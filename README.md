@@ -25,6 +25,8 @@ npm install de-formed-validations
 To avoid unnecessary complexity, use the property names of the object you want to validate for the schema property names. Validation functions can receive a second parameter of state if needed.
 
 ```ts
+// React Hook with controlled input example
+
 export const PersonValidation = () => {
   return useValidation<Person>({
     firstName: [
@@ -61,7 +63,6 @@ export const PersonValidation = () => {
 
 ### Step 2: Plug and Play
 
-####React Hook with controlled input example
 ```tsx
 export const PersonForm = ({ person, onChange }) => {
   const v = PersonValidation();
