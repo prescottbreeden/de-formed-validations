@@ -1,8 +1,8 @@
 {
   "name": "de-formed-validations",
-  "description": "Scalable Validation Solution for JavaScript Projects",
+  "description": "fullstack modular validations",
   "author": "Cluck Norris",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
@@ -17,6 +17,7 @@
     "@types/react": "^16.9.52",
     "react": "^16.13.1"
   },
+  "keywords": [ "validations", "validation", "react", "node", "hook", "frontend", "backend"],
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

@@ -2,7 +2,7 @@
 
 De-Formed Validations is an unopinionated API to manage form and data validations in JavaScript.
 
-De-Formed takes a simple schema definition and then provides you with a JavaScript object containing read-only objects and functions to handle validation-related tasks. Many validation libraries and schemas create a thick layer of properties and flags to stipulate types, required, etc, however, as validation requirements become more complex and forms become more complex, these libraries are overly complicated when all you need is a function that returns true/false.  With De-formed, just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (browser- or server-side). This provides the developer with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
+De-Formed takes a simple schema definition and then provides you with a JavaScript object containing read-only objects and functions to handle validation-related tasks. Many validation libraries and schemas create a thick layer of properties and flags to stipulate types, required fields, etc; however, as validation requirements become more complex and forms become more complex, these libraries are overly complicated when all you need is a function that returns true/false.  With De-formed, just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (browser- or server-side). This provides the developer with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
 
 ## Why use De-Formed?
 
@@ -50,10 +50,8 @@ export const PersonValidation = () => {
       },
       {
         errorMessage: 'Must be Ross if fist name is Bob.',
-        validation: (val: string, state: Dog) => {
-          return state.name.toLowerCase() === 'bob'
-            ? val.toLowerCase() === 'ross'
-            : true;
+        validation: (val: string, state: Person) => {
+          return state.firstName === 'Bob' ? val === 'Ross' : true;
         },
       },
     ],

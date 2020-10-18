@@ -77,6 +77,7 @@ describe('useValidation tests', () => {
       'runAllValidators',
       'getError',
       'getFieldValid',
+      'resetValidationState',
       'validate',
       'validateAll',
       'validateCustom',
@@ -405,6 +406,16 @@ describe('useValidation tests', () => {
         'Cannot be bob.',
         'Must be 18.',
       ]);
+    });
+  });
+
+  describe('resetValidationState', () => {
+    it('resets the validation state', () => {
+      const v = new Validation(schema);
+      v.validateAll(failingState);
+      v.resetValidationState();
+      expect(v.isValid).toBe(true);
+
     });
   });
 });

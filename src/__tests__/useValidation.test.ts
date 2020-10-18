@@ -76,6 +76,7 @@ describe('useValidation tests', () => {
       'getError',
       'getFieldValid',
       'isValid',
+      'resetValidationState',
       'validate',
       'validateAll',
       'validateCustom',
@@ -447,6 +448,19 @@ describe('useValidation tests', () => {
       });
       expect(result.current.isValid).toBe(true);
       expect(output).toBe('bob ross');
+    });
+  });
+
+  describe('resetValidationState', () => {
+    it('resets the validation state', () => {
+      const { result } = renderHook(() => useValidation(schema));
+      const state = defaultState;
+      act(() => {
+        result.current.validate('name', 'bob', defaultState);
+        result.current.resetValidationState();
+      });
+      expect(result.current.isValid).toBe(true);
+
     });
   });
 });

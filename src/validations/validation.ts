@@ -107,6 +107,10 @@ export class Validation<S> {
     return true;
   };
 
+  public resetValidationState = (): void => {
+    this._validationState = this.createValidationsState(this._validationSchema);
+  }
+
   /**
    * Executes a validation function on a value and updates the validation state.
    * @param property string the name of the property being validated

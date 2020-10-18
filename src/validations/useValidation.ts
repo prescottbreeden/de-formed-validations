@@ -22,6 +22,13 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     return vState;
   };
 
+  /**
+   *  Resets the validation state.
+   */
+  const resetValidationState = (): void => {
+    setValidationState(createValidationsState(validationSchema));
+  }
+
   // -- isValid and validationState ---------------------------------------
   const [isValid, setIsValid] = useState<boolean>(true);
   const [validationState, setValidationState] = useState<ValidationState>(
@@ -220,6 +227,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     getError,
     getFieldValid,
     isValid,
+    resetValidationState,
     validate,
     validateAll,
     validateCustom,
