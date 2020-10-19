@@ -56,7 +56,7 @@ export class Validation<S> {
    * @param value any the value to be tested for validation
    * @return true/false validation
    */
-  private runAllValidators = (property: keyof S, value: any, state: S) => {
+  private runAllValidators = (property: keyof S, value: any, state?: S) => {
     const runValidator = compose(
       (func: Function) => func(value, state),
       prop('validation')
@@ -117,7 +117,7 @@ export class Validation<S> {
    * @param value any the value to be tested for validation
    * @return boolean | undefined
    */
-  public validate = (property: keyof S, value: unknown, state: S) => {
+  public validate = (property: keyof S, value: unknown, state?: S) => {
     if (property in this._validationSchema) {
       const validations = this.runAllValidators(property, value, state);
       const updated = { ...this._validationState, ...validations };
@@ -159,7 +159,6 @@ export class Validation<S> {
    * unable to follow the names of the properties of an object. Will return a
    * boolean and update validation state.
    * @param props string[] property names to check (optional)
-   * @param object optional object
    * @return boolean
    */
   public validateCustom = (customValidations: CustomValidation[]) => {
@@ -183,7 +182,7 @@ export class Validation<S> {
    * @param value any the value to be tested for validation
    * @return boolean | undefined
    */
-  public validateIfTrue = (property: keyof S, value: unknown, state: S) => {
+  public validateIfTrue = (property: keyof S, value: unknown, state?: S) => {
     if (property in this._validationSchema) {
       const validations = this.runAllValidators(property, value, state);
       if (validations[property as string].isValid) {

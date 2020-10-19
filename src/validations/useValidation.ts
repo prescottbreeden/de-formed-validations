@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useEffect, useCallback } from 'react';
 import { compose, prop, map, all } from '../utilities';
-import {ValidationSchema, ValidationState, CustomValidation} from './types';
+import { ValidationSchema, ValidationState, CustomValidation } from './types';
 
 /**
  * A hook that can be used to generate an object containing functions and
@@ -42,7 +42,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @param value any the value to be tested for validation
    * @return true/false validation
    */
-  const runAllValidators = (property: keyof S, value: any, state: S) => {
+  const runAllValidators = (property: keyof S, value: any, state?: S) => {
     const val = typeof value === 'string' ? value.trim() : value;
     const runValidator = compose(
       (func: Function) => func(val, state),
@@ -69,7 +69,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @param value any the value to be tested for validation
    * @return boolean | undefined
    */
-  const validate = (property: keyof S, value: unknown, state: S) => {
+  const validate = (property: keyof S, value: unknown, state?: S) => {
     if (property in validationSchema) {
       const validations = runAllValidators(property, value, state);
       const updated = { ...validationState, ...validations };
@@ -85,17 +85,11 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * unable to follow the names of the properties of an object. Will return a
    * boolean and update validation state.
    * @param props string[] property names to check (optional)
-   * @param object optional object
    * @return boolean
    */
-  const validateCustom = (
-    customValidations: CustomValidation[],
-    object?: S
-  ) => {
+  const validateCustom = (customValidations: CustomValidation[]) => {
     const bools = map((custom: CustomValidation) => {
-      return object
-        ? validate(custom.key as keyof S, custom.value, object)
-        : validate(custom.key as keyof S, custom.value, {} as S);
+        return validate(custom.key as keyof S, custom.value, custom.state);
     }, customValidations);
     return all(bools);
   };
@@ -106,7 +100,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @param value any the value to be tested for validation
    * @return boolean | undefined
    */
-  const validateIfTrue = (property: keyof S, value: unknown, state: S) => {
+  const validateIfTrue = (property: keyof S, value: unknown, state?: S) => {
     if (property in validationSchema) {
       const validations = runAllValidators(property, value, state);
       if (validations[property as string].isValid) {

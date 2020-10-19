@@ -1,8 +1,8 @@
 {
   "name": "de-formed-validations",
-  "description": "fullstack modular validations",
+  "description": "Function-based modular validations",
   "author": "Prescott Breeden",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
@@ -17,7 +17,19 @@
     "@types/react": "^16.9.52",
     "react": "^16.13.1"
   },
-  "keywords": [ "validations", "validation", "react", "node", "hook", "frontend", "backend"],
+  "keywords": [
+    "validations",
+    "data validation",
+    "form validation",
+    "validation",
+    "react",
+    "node",
+    "hook",
+    "frontend",
+    "backend",
+    "dynamic",
+    "conditional"
+  ],
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

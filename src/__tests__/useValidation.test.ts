@@ -324,10 +324,9 @@ describe('useValidation tests', () => {
       const { result } = renderHook(() => useValidation(weirdSchema));
       const validNames = ['dingo', 'dingo', 'dingo'];
       act(() => {
-        result.current.validateCustom(
-          [{ key: 'namesAreAllDingo', value: validNames }],
-          { dingo: true }
-        );
+        result.current.validateCustom([
+          { key: 'namesAreAllDingo', value: validNames, state: { dingo: true } }
+        ]);
       });
       expect(result.current.isValid).toBe(true);
     });
