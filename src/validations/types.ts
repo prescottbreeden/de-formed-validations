@@ -26,13 +26,13 @@ export interface ValidationObject<S> {
   validate: (
     property: keyof S,
     value: unknown,
-    state: S
+    state?: S
   ) => boolean | undefined;
   validateAll: (state: S) => boolean;
   validateIfTrue: (
     property: keyof S,
     value: unknown,
-    state: S
+    state?: S
   ) => boolean | undefined;
   validateOnBlur: (state: S) => (event: any) => unknown;
   validateOnChange: (
