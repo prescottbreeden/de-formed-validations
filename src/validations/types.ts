@@ -29,6 +29,7 @@ export interface ValidationObject<S> {
     state?: S
   ) => boolean | undefined;
   validateAll: (state: S) => boolean;
+  validateCustom: (vals: CustomValidation[]) => boolean;
   validateIfTrue: (
     property: keyof S,
     value: unknown,
