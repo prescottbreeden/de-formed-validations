@@ -462,6 +462,10 @@ describe('useValidation tests', () => {
   });
 
   describe('validationErrors', () => {
+    it('starts as an empty array', () => {
+      const { result } = renderHook(() => useValidation(schema));
+      expect(result.current.validationErrors).toStrictEqual([]);
+    });
     it('adds validation errors when validation state is invalid', () => {
       const { result } = renderHook(() => useValidation(schema));
       act(() => {
