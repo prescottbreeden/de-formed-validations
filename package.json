@@ -2,7 +2,7 @@
   "name": "de-formed-validations",
   "description": "Function-based modular validations",
   "author": "Amplify CP",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
