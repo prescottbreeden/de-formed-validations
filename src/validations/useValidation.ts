@@ -34,6 +34,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
   const [validationState, setValidationState] = useState<ValidationState>(
     createValidationsState(validationSchema)
   );
+  const [validationErrors, setValidationErros] = useState<string[]>([]);
 
   /**
    * Executes the value against all provided validation functions and updates
@@ -198,9 +199,6 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     return true;
   };
 
-  // -- array of all current validation errors ----------------------------
-  const validationErrors = map(getError, Object.keys(validationState));
-
   // -- helper to determine if a new validation state is valid ------------
   const allValid = (state: ValidationState) => {
     const keys = Object.keys(state);
@@ -210,11 +208,23 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     return valid;
   };
 
-  // -- memoized allValid to update state on change detection -------------
+  // -- helper to build array of errors when validation state is invalid ---
+  const generateValidationErrors = (state: ValidationState) => {
+    const keys = Object.keys(state);
+    return keys.reduce((prev: string[], curr: string) => {
+      return getError(curr)
+        ? [...prev, getError(curr)]
+        : prev;
+    }, []);
+  }
+
+  // -- memoized functions to update state on change detection -------------
   const updateIsValid = useCallback(allValid, [validationState]);
+  const updateErrors = useCallback(generateValidationErrors, [validationState]);
 
   useEffect(() => {
     setIsValid(updateIsValid(validationState));
+    setValidationErros(updateErrors(validationState));
   }, [validationState, updateIsValid]);
 
   return {

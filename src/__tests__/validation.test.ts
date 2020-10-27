@@ -415,7 +415,19 @@ describe('useValidation tests', () => {
       v.validateAll(failingState);
       v.resetValidationState();
       expect(v.isValid).toBe(true);
-
+    });
+  });
+  describe('validationErrors', () => {
+    it('adds validation errors when validation state is invalid', () => {
+      const v = new Validation(schema);
+      v.validateAll(failingState);
+      expect(v.validationErrors).toStrictEqual(['Cannot be bob.', 'Must be 18.']);
+    });
+    it('removes validation errors when validation state is valid', () => {
+      const v = new Validation(schema);
+      v.validateAll(failingState);
+      v.validateAll(defaultState);
+      expect(v.validationErrors).toStrictEqual([]);
     });
   });
 });

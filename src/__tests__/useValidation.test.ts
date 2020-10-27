@@ -168,7 +168,6 @@ describe('useValidation tests', () => {
         result.current.validate(name, value, state);
         result.current.validate(name, 'bob ross', state);
       });
-      // console.log('result', result.current);
       const output = result.current.isValid;
       expect(output).toBe(true);
     });
@@ -453,13 +452,30 @@ describe('useValidation tests', () => {
   describe('resetValidationState', () => {
     it('resets the validation state', () => {
       const { result } = renderHook(() => useValidation(schema));
-      const state = defaultState;
       act(() => {
         result.current.validate('name', 'bob', defaultState);
         result.current.resetValidationState();
       });
       expect(result.current.isValid).toBe(true);
 
+    });
+  });
+
+  describe('validationErrors', () => {
+    it('adds validation errors when validation state is invalid', () => {
+      const { result } = renderHook(() => useValidation(schema));
+      act(() => {
+        result.current.validate('name', 'bob', defaultState);
+      });
+      expect(result.current.validationErrors).toStrictEqual(['Cannot be bob.']);
+    });
+    it('removes validation errors when validation state is valid', () => {
+      const { result } = renderHook(() => useValidation(schema));
+      act(() => {
+        result.current.validate('name', 'bob', defaultState);
+        result.current.validate('name', 'dingo', defaultState);
+      });
+      expect(result.current.validationErrors).toStrictEqual([]);
     });
   });
 });
