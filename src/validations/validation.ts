@@ -1,5 +1,6 @@
-import { all, compose, map, prop } from '../utilities';
 import {CustomValidation, ValidationSchema, ValidationState} from './types';
+import { all, compose, isPropertyValid, prop } from '../utilities';
+import { map, reduce } from 'ramda';
 
 export class Validation<S> {
   private _validationSchema: ValidationSchema<S>;
@@ -11,10 +12,10 @@ export class Validation<S> {
 
   public get validationErrors() {
     const props = Object.keys(this._validationState);
-    const errors = props.reduce((prev: string[], curr: string) => {
+    const errors = reduce((prev: string[], curr: string) => {
       const err = this.getError(curr as keyof S);
       return err ? [...prev, err] : prev;
-    }, []);
+    }, [], props);
     return errors;
   }
 
@@ -28,24 +29,22 @@ export class Validation<S> {
   }
 
   private createValidationsState = (schema: ValidationSchema<S>) => {
-    const keys = Object.keys(schema);
-    const vState = keys.reduce((prev: any, item: string) => {
-      prev[item] = {
+    return reduce((prev: any, item: string) => ({
+      ...prev,
+      [item]: {
         isValid: true,
         error: '',
-      };
-      return prev;
-    }, {});
-    return vState;
+      }
+    }), {}, Object.keys(schema));
   };
 
   private allValid = (state: ValidationState) => {
     const keys = Object.keys(state);
-    const valid = keys.reduce((prev: boolean, current: string) => {
+    const valid = reduce((prev: boolean, current: string) => {
       return prev
-        ? this.getFieldValid(current as keyof S, this._validationState)
+        ? isPropertyValid(current, this._validationState)
         : prev;
-    }, true);
+    }, true, keys);
     return valid;
   };
 
@@ -71,9 +70,9 @@ export class Validation<S> {
       index > -1
         ? this._validationSchema[property as string][index].errorMessage
         : '';
-    const validations: ValidationState = {};
-    validations[property as string] = { isValid, error };
-    return validations;
+    return {
+      [property]: { isValid, error }
+    }
   };
 
   /**
@@ -101,8 +100,7 @@ export class Validation<S> {
     vState: ValidationState = this._validationState
   ) => {
     if ((property as string) in this._validationSchema) {
-      const val = compose(prop('isValid'), prop(property));
-      return val(vState);
+      return isPropertyValid(property, vState);
     }
     return true;
   };
@@ -120,10 +118,11 @@ export class Validation<S> {
   public validate = (property: keyof S, value: unknown, state?: S) => {
     if (property in this._validationSchema) {
       const validations = this.runAllValidators(property, value, state);
-      const updated = { ...this._validationState, ...validations };
-      this._validationState = updated;
-      const bool = validations[property as string].isValid;
-      return bool;
+      this._validationState = {
+        ...this._validationState,
+        ...validations
+      };
+      return isPropertyValid(property, validations);
     }
     return undefined;
   };
@@ -137,20 +136,18 @@ export class Validation<S> {
    */
   public validateAll = (
     state: S,
-    props: string[] = Object.keys(this._validationSchema)
+    props: [keyof S] = Object.keys(this._validationSchema) as [keyof S]
   ) => {
-    const newState = props.reduce((acc, property) => {
+    const newState = reduce((acc: ValidationState, property: keyof S) => {
       const r = this.runAllValidators(
-        property as keyof S,
-        state[property as keyof S],
+        property,
+        prop(property, state),
         state
       );
-      acc = { ...acc, ...r };
-      return acc;
-    }, {});
+      return { ...acc, ...r };
+    }, {}, props);
     this._validationState = newState;
-    const result = this.allValid(newState);
-    return result;
+    return this.allValid(newState);
   };
 
   /**
@@ -162,18 +159,17 @@ export class Validation<S> {
    * @return boolean
    */
   public validateCustom = (customValidations: CustomValidation[]) => {
-    const newState = customValidations.reduce((acc, property) => {
+    const newState = reduce((acc: ValidationState, property: CustomValidation) => {
       const r = this.runAllValidators(
-        property.key as keyof S,
-        property.value,
-        property.state
+        prop('key', property),
+        prop('value', property),
+        prop('state', property)
       );
       acc = { ...acc, ...r };
       return acc;
-    }, {});
+    }, {}, customValidations);
     this._validationState = newState;
-    const result = this.allValid(newState);
-    return result;
+    return this.allValid(newState);
   };
 
   /**
@@ -185,11 +181,11 @@ export class Validation<S> {
   public validateIfTrue = (property: keyof S, value: unknown, state?: S) => {
     if (property in this._validationSchema) {
       const validations = this.runAllValidators(property, value, state);
-      if (validations[property as string].isValid) {
+      if (isPropertyValid(property, validations)) {
         const updated = { ...this._validationState, ...validations };
         this._validationState = updated;
       }
-      return validations[property as string].isValid;
+      return isPropertyValid(property, validations)
     }
     return undefined;
   };

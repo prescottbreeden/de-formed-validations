@@ -1,15 +1,5 @@
-import { ValidationState, ValidationSchema, CustomValidation } from "./validations/types";
+import { ValidationState } from "./validations/types";
 export declare const compose: (...fns: Function[]) => (...args: any[]) => any;
-export declare function curry(fn: Function): (...args: any[]) => any;
-export declare const map: (...args: any[]) => any;
-export declare const reduce: (...args: any[]) => any;
 export declare const prop: (...args: any[]) => any;
-export declare const all: any;
-export declare function baseRunAllValidators<S>(schema: ValidationSchema<S>): (property: keyof S, value: any, state?: S | undefined) => ValidationState;
-export declare function baseValidate<S>(schema: ValidationSchema<S>, setValidationState: Function): (property: keyof S, value: unknown, state?: S | undefined) => boolean | undefined;
-export declare function baseValidateCustom<S>(validate: Function): (customValidations: CustomValidation[], object?: S | undefined) => any;
-export declare function baseValidateIfTrue<S>(schema: ValidationSchema<S>, runAllValidators: Function, setValidationState: Function): (property: keyof S, value: unknown, state: S) => any;
-export declare function baseValidateOnBlur<S>(validate: Function): (state: S) => (event: any) => void;
-export declare function baseValidateOnChange<S>(validateIfTrue: Function): (onChange: Function, state: S) => (event: any) => any;
-export declare function baseValidateAll<S>(schema: ValidationSchema<S>, runAllValidators: Function, setValidationState: Function): (state: S, props?: string[]) => boolean;
-export declare const allValid: (state: ValidationState) => boolean;
+export declare const all: (list: readonly any[]) => any;
+export declare function isPropertyValid<S>(property: keyof S, validations: ValidationState): any;

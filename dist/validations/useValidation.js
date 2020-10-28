@@ -3,59 +3,57 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.useValidation = void 0;
 const react_1 = require("react");
 const utilities_1 = require("../utilities");
+const ramda_1 = require("ramda");
 exports.useValidation = (validationSchema) => {
     const createValidationsState = (schema) => {
-        const keys = Object.keys(schema);
-        const vState = keys.reduce((prev, item) => {
-            prev[item] = {
+        return ramda_1.reduce((prev, key) => ({
+            ...prev,
+            [key]: {
                 isValid: true,
                 error: '',
-            };
-            return prev;
-        }, {});
-        return vState;
+            }
+        }), {}, Object.keys(schema));
     };
-    const resetValidationState = () => {
-        setValidationState(createValidationsState(validationSchema));
-    };
+    const resetValidationState = () => utilities_1.compose(setValidationState, createValidationsState)(validationSchema);
     const [isValid, setIsValid] = react_1.useState(true);
     const [validationState, setValidationState] = react_1.useState(createValidationsState(validationSchema));
     const [validationErrors, setValidationErros] = react_1.useState([]);
     const runAllValidators = (property, value, state) => {
-        const val = typeof value === 'string' ? value.trim() : value;
-        const runValidator = utilities_1.compose((func) => func(val, state), utilities_1.prop('validation'));
-        const bools = utilities_1.map(runValidator, validationSchema[property]);
+        const runValidator = utilities_1.compose((func) => func(value, state), utilities_1.prop('validation'));
+        const bools = ramda_1.map(runValidator, utilities_1.prop(property, validationSchema));
         const isValid = utilities_1.all(bools);
         const index = bools.indexOf(false);
         const error = index > -1
             ? validationSchema[property][index].errorMessage
             : '';
-        const validations = {};
-        validations[property] = { isValid, error };
-        return validations;
+        return {
+            [property]: { isValid, error }
+        };
     };
     const validate = (property, value, state) => {
         if (property in validationSchema) {
             const validations = runAllValidators(property, value, state);
             const updated = { ...validationState, ...validations };
             setValidationState(updated);
-            return validations[property].isValid;
+            return utilities_1.isPropertyValid(property, validations);
         }
         return undefined;
     };
     const validateCustom = (customValidations) => {
-        const bools = utilities_1.map((custom) => {
-            return validate(custom.key, custom.value, custom.state);
-        }, customValidations);
+        const bools = ramda_1.map(ramda_1.converge(validate, [
+            utilities_1.prop('key'),
+            utilities_1.prop('value'),
+            utilities_1.prop('state')
+        ]), customValidations);
         return utilities_1.all(bools);
     };
     const validateIfTrue = (property, value, state) => {
         if (property in validationSchema) {
             const validations = runAllValidators(property, value, state);
-            if (validations[property].isValid) {
+            if (utilities_1.isPropertyValid(property, validations)) {
                 setValidationState({ ...validationState, ...validations });
             }
-            return validations[property].isValid;
+            return utilities_1.isPropertyValid(property, validations);
         }
         return undefined;
     };
@@ -69,15 +67,15 @@ exports.useValidation = (validationSchema) => {
         return onChange(event);
     };
     const validateAll = (state, props = Object.keys(validationSchema)) => {
-        const newState = utilities_1.reduce((acc, property) => {
-            const r = runAllValidators(property, state[property], state);
-            acc = { ...acc, ...r };
-            return acc;
+        const newState = ramda_1.reduce((acc, property) => {
+            const r = runAllValidators(property, utilities_1.prop(property, state), state);
+            return {
+                ...acc,
+                ...r
+            };
         }, {}, props);
         setValidationState(newState);
-        const result = allValid(newState);
-        setIsValid(result);
-        return result;
+        return allValid(newState);
     };
     const getError = (property, vState = validationState) => {
         if (property in validationSchema) {
@@ -94,19 +92,18 @@ exports.useValidation = (validationSchema) => {
         return true;
     };
     const allValid = (state) => {
-        const keys = Object.keys(state);
-        const valid = keys.reduce((prev, current) => {
-            return prev ? getFieldValid(current, state) : prev;
-        }, true);
-        return valid;
+        return ramda_1.reduce((prev, curr) => {
+            return prev
+                ? utilities_1.isPropertyValid(curr, state)
+                : prev;
+        }, true, Object.keys(state));
     };
     const generateValidationErrors = (state) => {
-        const keys = Object.keys(state);
-        return keys.reduce((prev, curr) => {
+        return ramda_1.reduce((prev, curr) => {
             return getError(curr)
                 ? [...prev, getError(curr)]
                 : prev;
-        }, []);
+        }, [], Object.keys(state));
     };
     const updateIsValid = react_1.useCallback(allValid, [validationState]);
     const updateErrors = react_1.useCallback(generateValidationErrors, [validationState]);

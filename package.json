@@ -2,7 +2,7 @@
   "name": "de-formed-validations",
   "description": "Function-based modular validations",
   "author": "Amplify CP",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
@@ -14,7 +14,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/ramda": "^0.27.30",
     "@types/react": "^16.9.52",
+    "ramda": "^0.27.1",
     "react": "^16.13.1"
   },
   "keywords": [
