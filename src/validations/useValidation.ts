@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, useEffect, useCallback } from 'react';
-import { compose, prop, map, all } from '../utilities';
+import { compose, prop, map, all, reduce } from '../utilities';
 import { ValidationSchema, ValidationState, CustomValidation } from './types';
 
 /**
@@ -150,7 +150,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     state: S,
     props: string[] = Object.keys(validationSchema)
   ) => {
-    const newState = props.reduce((acc, property) => {
+    const newState = reduce((acc: ValidationState, property: string) => {
       const r = runAllValidators(
         property as keyof S,
         state[property as keyof S],
@@ -158,7 +158,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
       );
       acc = { ...acc, ...r };
       return acc;
-    }, {});
+    }, {}, props);
     setValidationState(newState);
     const result = allValid(newState);
     setIsValid(result);
