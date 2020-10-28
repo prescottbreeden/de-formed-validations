@@ -20,7 +20,7 @@ export interface ValidationObject<S> {
     isValid: boolean;
     resetValidationState: () => void;
     validate: (property: keyof S, value: unknown, state?: S) => boolean | undefined;
-    validateAll: (state: S, keys?: [keyof S]) => boolean;
+    validateAll: (state: S, keys?: string[]) => boolean;
     validateCustom: (vals: CustomValidation[]) => boolean;
     validateIfTrue: (property: keyof S, value: unknown, state?: S) => boolean | undefined;
     validateOnBlur: (state: S) => (event: any) => unknown;
