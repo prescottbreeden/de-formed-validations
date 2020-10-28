@@ -36,7 +36,7 @@ class Validation {
             };
         };
         this.getError = (property) => {
-            if (property in this._validationSchema) {
+            if ((property) in this._validationSchema) {
                 const val = utilities_1.compose(utilities_1.prop('error'), utilities_1.prop(property));
                 return val(this._validationState);
             }

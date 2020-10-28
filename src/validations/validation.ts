@@ -13,7 +13,7 @@ export class Validation<S> {
   public get validationErrors() {
     const props = Object.keys(this._validationState);
     const errors = reduce((prev: string[], curr: string) => {
-      const err = this.getError(curr as keyof S);
+      const err = this.getError(curr);
       return err ? [...prev, err] : prev;
     }, [], props);
     return errors;
@@ -55,7 +55,7 @@ export class Validation<S> {
    * @param value any the value to be tested for validation
    * @return true/false validation
    */
-  private runAllValidators = (property: keyof S, value: any, state?: S) => {
+  private runAllValidators = (property: string, value: any, state?: S) => {
     const runValidator = compose(
       (func: Function) => func(value, state),
       prop('validation')
@@ -80,8 +80,8 @@ export class Validation<S> {
    * @param property the name of the property to retrieve
    * @return string
    */
-  public getError = (property: keyof S) => {
-    if ((property as string) in this._validationSchema) {
+  public getError = (property: string) => {
+    if ((property) in this._validationSchema) {
       const val = compose(prop('error'), prop(property));
       return val(this._validationState);
     }
@@ -96,7 +96,7 @@ export class Validation<S> {
    * @return boolean
    */
   public getFieldValid = (
-    property: keyof S,
+    property: string,
     vState: ValidationState = this._validationState
   ) => {
     if ((property as string) in this._validationSchema) {
@@ -115,7 +115,7 @@ export class Validation<S> {
    * @param value any the value to be tested for validation
    * @return boolean | undefined
    */
-  public validate = (property: keyof S, value: unknown, state?: S) => {
+  public validate = (property: string, value: unknown, state?: S) => {
     if (property in this._validationSchema) {
       const validations = this.runAllValidators(property, value, state);
       this._validationState = {
@@ -136,9 +136,9 @@ export class Validation<S> {
    */
   public validateAll = (
     state: S,
-    props: [keyof S] = Object.keys(this._validationSchema) as [keyof S]
+    props: string[] = Object.keys(this._validationSchema)
   ) => {
-    const newState = reduce((acc: ValidationState, property: keyof S) => {
+    const newState = reduce((acc: ValidationState, property: string) => {
       const r = this.runAllValidators(
         property,
         prop(property, state),
@@ -178,7 +178,7 @@ export class Validation<S> {
    * @param value any the value to be tested for validation
    * @return boolean | undefined
    */
-  public validateIfTrue = (property: keyof S, value: unknown, state?: S) => {
+  public validateIfTrue = (property: string, value: unknown, state?: S) => {
     if (property in this._validationSchema) {
       const validations = this.runAllValidators(property, value, state);
       if (isPropertyValid(property, validations)) {
@@ -199,7 +199,7 @@ export class Validation<S> {
   public validateOnBlur = (state: S) => {
     return (event: any) => {
       const { value, name } = event.target;
-      this.validate(name as keyof S, value, state);
+      this.validate(name, value, state);
     };
   };
 
@@ -213,7 +213,7 @@ export class Validation<S> {
   public validateOnChange = (onChange: Function, state: S) => {
     return (event: any) => {
       const { value, name } = event.target;
-      this.validateIfTrue(name as keyof S, value, state);
+      this.validateIfTrue(name, value, state);
       return onChange(event);
     };
   };
