@@ -69,11 +69,11 @@ exports.useValidation = (validationSchema) => {
         return onChange(event);
     };
     const validateAll = (state, props = Object.keys(validationSchema)) => {
-        const newState = props.reduce((acc, property) => {
+        const newState = utilities_1.reduce((acc, property) => {
             const r = runAllValidators(property, state[property], state);
             acc = { ...acc, ...r };
             return acc;
-        }, {});
+        }, {}, props);
         setValidationState(newState);
         const result = allValid(newState);
         setIsValid(result);
