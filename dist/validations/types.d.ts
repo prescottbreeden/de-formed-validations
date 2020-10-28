@@ -15,14 +15,14 @@ export interface ValidationState {
     };
 }
 export interface ValidationObject<S> {
-    getError: (property: keyof S) => string;
-    getFieldValid: (property: keyof S) => boolean;
+    getError: (property: string) => string;
+    getFieldValid: (property: string) => boolean;
     isValid: boolean;
     resetValidationState: () => void;
-    validate: (property: keyof S, value: unknown, state?: S) => boolean | undefined;
+    validate: (property: string, value: unknown, state?: S) => boolean | undefined;
     validateAll: (state: S, keys?: string[]) => boolean;
     validateCustom: (vals: CustomValidation[]) => boolean;
-    validateIfTrue: (property: keyof S, value: unknown, state?: S) => boolean | undefined;
+    validateIfTrue: (property: string, value: unknown, state?: S) => boolean | undefined;
     validateOnBlur: (state: S) => (event: any) => unknown;
     validateOnChange: (onChange: (event: any) => unknown, state: S) => (event: any) => unknown;
     validationErrors: string[];
