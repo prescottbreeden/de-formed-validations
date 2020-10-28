@@ -1,6 +1,7 @@
 import { ChangeEvent, useState, useEffect, useCallback } from 'react';
-import { compose, prop, map, all, reduce } from '../utilities';
 import { ValidationSchema, ValidationState, CustomValidation } from './types';
+import { compose, prop, all, isPropertyValid } from '../utilities';
+import { map, reduce, converge } from 'ramda';
 
 /**
  * A hook that can be used to generate an object containing functions and
@@ -11,23 +12,22 @@ import { ValidationSchema, ValidationState, CustomValidation } from './types';
 export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
   // -- Build Validation State Object -------------------------------------
   const createValidationsState = (schema: ValidationSchema<S>) => {
-    const keys = Object.keys(schema);
-    const vState = keys.reduce((prev: any, item: string) => {
-      prev[item] = {
+    return reduce((prev: any, key: keyof S) => ({
+      ...prev,
+      [key]: {
         isValid: true,
         error: '',
-      };
-      return prev;
-    }, {});
-    return vState;
+      }
+    }), {}, Object.keys(schema) as [keyof S]);
   };
 
   /**
    *  Resets the validation state.
    */
-  const resetValidationState = (): void => {
-    setValidationState(createValidationsState(validationSchema));
-  }
+  const resetValidationState = (): void => compose(
+    setValidationState,
+    createValidationsState
+  )(validationSchema);
 
   // -- isValid and validationState ---------------------------------------
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -44,14 +44,13 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @return true/false validation
    */
   const runAllValidators = (property: keyof S, value: any, state?: S) => {
-    const val = typeof value === 'string' ? value.trim() : value;
     const runValidator = compose(
-      (func: Function) => func(val, state),
+      (func: Function) => func(value, state),
       prop('validation')
     );
     const bools: boolean[] = map(
       runValidator,
-      validationSchema[property as string]
+      prop(property, validationSchema)
     );
     const isValid: boolean = all(bools);
     const index: number = bools.indexOf(false);
@@ -59,9 +58,9 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
       index > -1
         ? validationSchema[property as string][index].errorMessage
         : '';
-    const validations: ValidationState = {};
-    validations[property as string] = { isValid, error };
-    return validations;
+    return {
+      [property]: { isValid, error }
+    }
   };
 
   /**
@@ -75,7 +74,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
       const validations = runAllValidators(property, value, state);
       const updated = { ...validationState, ...validations };
       setValidationState(updated);
-      return validations[property as string].isValid;
+      return isPropertyValid(property, validations);
     }
     return undefined;
   };
@@ -89,9 +88,12 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @return boolean
    */
   const validateCustom = (customValidations: CustomValidation[]) => {
-    const bools = map((custom: CustomValidation) => {
-        return validate(custom.key as keyof S, custom.value, custom.state);
-    }, customValidations);
+    const bools = map(
+      converge(validate, [
+        prop('key'),
+        prop('value'),
+        prop('state')
+      ]), customValidations);
     return all(bools);
   };
 
@@ -104,10 +106,10 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
   const validateIfTrue = (property: keyof S, value: unknown, state?: S) => {
     if (property in validationSchema) {
       const validations = runAllValidators(property, value, state);
-      if (validations[property as string].isValid) {
+      if (isPropertyValid(property, validations)) {
         setValidationState({ ...validationState, ...validations });
       }
-      return validations[property as string].isValid;
+      return isPropertyValid(property, validations);
     }
     return undefined;
   };
@@ -148,21 +150,21 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    */
   const validateAll = (
     state: S,
-    props: string[] = Object.keys(validationSchema)
+    props: [keyof S] = Object.keys(validationSchema) as [keyof S]
   ) => {
-    const newState = reduce((acc: ValidationState, property: string) => {
+    const newState = reduce((acc: ValidationState, property: keyof S) => {
       const r = runAllValidators(
-        property as keyof S,
-        state[property as keyof S],
+        property,
+        prop(property, state),
         state
       );
-      acc = { ...acc, ...r };
-      return acc;
-    }, {}, props);
+      return {
+        ...acc,
+        ...r
+      }
+    }, {}, props as [keyof S]);
     setValidationState(newState);
-    const result = allValid(newState);
-    setIsValid(result);
-    return result;
+    return allValid(newState);
   };
 
   /**
@@ -171,7 +173,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @return string
    */
   const getError = (
-    property: string,
+    property: keyof S,
     vState: ValidationState = validationState
   ) => {
     if (property in validationSchema) {
@@ -189,7 +191,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @return boolean
    */
   const getFieldValid = (
-    property: string,
+    property: keyof S,
     vState: ValidationState = validationState
   ) => {
     if (property in validationSchema) {
@@ -201,21 +203,20 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
 
   // -- helper to determine if a new validation state is valid ------------
   const allValid = (state: ValidationState) => {
-    const keys = Object.keys(state);
-    const valid = keys.reduce((prev: boolean, current: string) => {
-      return prev ? getFieldValid(current, state) : prev;
-    }, true);
-    return valid;
+    return reduce((prev: boolean, curr: keyof S) => {
+      return prev
+        ? isPropertyValid(curr, state)
+        : prev;
+    }, true, Object.keys(state) as [keyof S]);
   };
 
   // -- helper to build array of errors when validation state is invalid ---
   const generateValidationErrors = (state: ValidationState) => {
-    const keys = Object.keys(state);
-    return keys.reduce((prev: string[], curr: string) => {
-      return getError(curr)
-        ? [...prev, getError(curr)]
+    return reduce((prev: string[], curr: keyof S) => {
+      return getError(curr as keyof S)
+        ? [...prev, getError(curr) as string]
         : prev;
-    }, []);
+    }, [], Object.keys(state) as [keyof S]);
   }
 
   // -- memoized functions to update state on change detection -------------

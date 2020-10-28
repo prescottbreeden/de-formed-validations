@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useValidation } from '../validations/useValidation';
 import { ValidationSchema, ValidationState } from '../validations/types';
+import {map} from 'ramda';
 
 const schema: ValidationSchema<any> = {
   name: [
@@ -239,11 +240,20 @@ describe('useValidation tests', () => {
 
     it('returns false if any validation fails', () => {
       const { result } = renderHook(() => useValidation(schema));
-      let output: boolean | undefined;
       act(() => {
-        output = result.current.validateAll(failingState);
+        const output = result.current.validateAll(failingState);
+        expect(output).toBe(false);
       });
-      expect(output).toBe(false);
+    });
+
+    it('handles nested validation reductions', () => {
+      const data = [ defaultState, defaultState, defaultState ];
+      const { result } = renderHook(() => useValidation(schema));
+      let output: boolean[];
+      act(() => {
+        output = map(result.current.validateAll, data);
+        expect(output).toStrictEqual([true, true, true]);
+      });
     });
   });
 
