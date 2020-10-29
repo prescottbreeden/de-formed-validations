@@ -40,12 +40,19 @@ exports.useValidation = (validationSchema) => {
         return undefined;
     };
     const validateCustom = (customValidations) => {
-        const bools = ramda_1.map(ramda_1.converge(validate, [
+        const zip = ramda_1.converge(runAllValidators, [
             utilities_1.prop('key'),
             utilities_1.prop('value'),
             utilities_1.prop('state')
-        ]), customValidations);
-        return utilities_1.all(bools);
+        ]);
+        const state = ramda_1.reduce((prev, current) => {
+            return {
+                ...prev,
+                ...zip(current)
+            };
+        }, {}, customValidations);
+        setValidationState(state);
+        return allValid(state);
     };
     const validateIfTrue = (property, value, state) => {
         if (property in validationSchema) {

@@ -71,13 +71,19 @@ class Validation {
             return this.allValid(newState);
         };
         this.validateCustom = (customValidations) => {
-            const newState = ramda_1.reduce((acc, property) => {
-                const r = this.runAllValidators(utilities_1.prop('key', property), utilities_1.prop('value', property), utilities_1.prop('state', property));
-                acc = { ...acc, ...r };
-                return acc;
+            const zip = ramda_1.converge(this.runAllValidators, [
+                utilities_1.prop('key'),
+                utilities_1.prop('value'),
+                utilities_1.prop('state')
+            ]);
+            const state = ramda_1.reduce((prev, current) => {
+                return {
+                    ...prev,
+                    ...zip(current)
+                };
             }, {}, customValidations);
-            this._validationState = newState;
-            return this.allValid(newState);
+            this._validationState = state;
+            return this.allValid(state);
         };
         this.validateIfTrue = (property, value, state) => {
             if (property in this._validationSchema) {

@@ -7,7 +7,7 @@ export declare const useValidation: <S>(validationSchema: ValidationSchema<S>) =
     resetValidationState: () => void;
     validate: (property: string, value: unknown, state?: S | undefined) => any;
     validateAll: (state: S, props?: string[]) => boolean;
-    validateCustom: (customValidations: CustomValidation[]) => any;
+    validateCustom: (customValidations: CustomValidation[]) => boolean;
     validateIfTrue: (property: string, value: unknown, state?: S | undefined) => any;
     validateOnBlur: (state: S) => (event: ChangeEvent<HTMLInputElement>) => void;
     validateOnChange: (onChange: Function, state: S) => (event: ChangeEvent<HTMLInputElement>) => any;
