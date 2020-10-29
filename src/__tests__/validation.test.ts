@@ -256,7 +256,7 @@ describe('useValidation tests', () => {
       let output: boolean | undefined;
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: validNames },
-        { key: 'namesAreAllDingo', value: validNames, state: defaultState }
+        { key: 'namesAreAllDingo', value: validNames, state: defaultState },
       ]);
       expect(typeof output).toBe('boolean');
     });
@@ -266,7 +266,7 @@ describe('useValidation tests', () => {
       let output: boolean | undefined;
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: validNames },
-        { key: 'namesAreAllDingo', value: validNames, state: defaultState }
+        { key: 'namesAreAllDingo', value: validNames, state: defaultState },
       ]);
       expect(output).toBe(true);
     });
@@ -277,7 +277,7 @@ describe('useValidation tests', () => {
       let output: boolean | undefined;
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: invalidNames },
-        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState }
+        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState },
       ]);
       expect(output).toBe(false);
     });
@@ -287,7 +287,7 @@ describe('useValidation tests', () => {
       const invalidNames = ['jack', 'bob', 'bob'];
       v.validateCustom([
         { key: 'namesAreAllBob', value: invalidNames },
-        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState }
+        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState },
       ]);
       expect(v.isValid).toBe(false);
     });
@@ -295,7 +295,9 @@ describe('useValidation tests', () => {
     it('takes an optional object for second argument', () => {
       const v = new Validation(weirdSchema);
       const validNames = ['dingo', 'dingo', 'dingo'];
-      v.validateCustom([{ key: 'namesAreAllDingo', value: validNames, state: { dingo: true } }]);
+      v.validateCustom([
+        { key: 'namesAreAllDingo', value: validNames, state: { dingo: true } },
+      ]);
       expect(v.isValid).toBe(true);
     });
   });
@@ -431,7 +433,10 @@ describe('useValidation tests', () => {
     it('adds validation errors when validation state is invalid', () => {
       const v = new Validation(schema);
       v.validateAll(failingState);
-      expect(v.validationErrors).toStrictEqual(['Cannot be bob.', 'Must be 18.']);
+      expect(v.validationErrors).toStrictEqual([
+        'Cannot be bob.',
+        'Must be 18.',
+      ]);
     });
     it('removes validation errors when validation state is valid', () => {
       const v = new Validation(schema);

@@ -1,4 +1,9 @@
-import {CustomValidation, ValidationSchema, ValidationState} from './types';
+import {
+  CustomValidation,
+  ValidationFunction,
+  ValidationSchema,
+  ValidationState,
+} from './types';
 import { all, compose, isPropertyValid, prop } from '../utilities';
 import { converge, map, reduce } from 'ramda';
 
@@ -12,10 +17,14 @@ export class Validation<S> {
 
   public get validationErrors() {
     const props = Object.keys(this._validationState);
-    const errors = reduce((prev: string[], curr: string) => {
-      const err = this.getError(curr);
-      return err ? [...prev, err] : prev;
-    }, [], props);
+    const errors = reduce(
+      (prev: string[], curr: string) => {
+        const err = this.getError(curr);
+        return err ? [...prev, err] : prev;
+      },
+      [],
+      props,
+    );
     return errors;
   }
 
@@ -29,22 +38,28 @@ export class Validation<S> {
   }
 
   private createValidationsState = (schema: ValidationSchema<S>) => {
-    return reduce((prev: any, item: string) => ({
-      ...prev,
-      [item]: {
-        isValid: true,
-        error: '',
-      }
-    }), {}, Object.keys(schema));
+    return reduce(
+      (prev: any, item: string) => ({
+        ...prev,
+        [item]: {
+          isValid: true,
+          error: '',
+        },
+      }),
+      {},
+      Object.keys(schema),
+    );
   };
 
   private allValid = (state: ValidationState) => {
     const keys = Object.keys(state);
-    const valid = reduce((prev: boolean, current: string) => {
-      return prev
-        ? isPropertyValid(current, this._validationState)
-        : prev;
-    }, true, keys);
+    const valid = reduce(
+      (prev: boolean, current: string) => {
+        return prev ? isPropertyValid(current, this._validationState) : prev;
+      },
+      true,
+      keys,
+    );
     return valid;
   };
 
@@ -57,12 +72,12 @@ export class Validation<S> {
    */
   private runAllValidators = (property: string, value: any, state?: S) => {
     const runValidator = compose(
-      (func: Function) => func(value, state),
-      prop('validation')
+      (func: ValidationFunction<S>) => func(value, state),
+      prop('validation'),
     );
     const bools: boolean[] = map(
       runValidator,
-      this._validationSchema[property as string]
+      this._validationSchema[property as string],
     );
     const isValid: boolean = all(bools);
     const index: number = bools.indexOf(false);
@@ -71,8 +86,8 @@ export class Validation<S> {
         ? this._validationSchema[property as string][index].errorMessage
         : '';
     return {
-      [property]: { isValid, error }
-    }
+      [property]: { isValid, error },
+    };
   };
 
   /**
@@ -81,7 +96,7 @@ export class Validation<S> {
    * @return string
    */
   public getError = (property: string) => {
-    if ((property) in this._validationSchema) {
+    if (property in this._validationSchema) {
       const val = compose(prop('error'), prop(property));
       return val(this._validationState);
     }
@@ -97,7 +112,7 @@ export class Validation<S> {
    */
   public getFieldValid = (
     property: string,
-    vState: ValidationState = this._validationState
+    vState: ValidationState = this._validationState,
   ) => {
     if ((property as string) in this._validationSchema) {
       return isPropertyValid(property, vState);
@@ -107,7 +122,7 @@ export class Validation<S> {
 
   public resetValidationState = (): void => {
     this._validationState = this.createValidationsState(this._validationSchema);
-  }
+  };
 
   /**
    * Executes a validation function on a value and updates the validation state.
@@ -120,7 +135,7 @@ export class Validation<S> {
       const validations = this.runAllValidators(property, value, state);
       this._validationState = {
         ...this._validationState,
-        ...validations
+        ...validations,
       };
       return isPropertyValid(property, validations);
     }
@@ -136,16 +151,16 @@ export class Validation<S> {
    */
   public validateAll = (
     state: S,
-    props: string[] = Object.keys(this._validationSchema)
+    props: string[] = Object.keys(this._validationSchema),
   ) => {
-    const newState = reduce((acc: ValidationState, property: string) => {
-      const r = this.runAllValidators(
-        property,
-        prop(property, state),
-        state
-      );
-      return { ...acc, ...r };
-    }, {}, props);
+    const newState = reduce(
+      (acc: ValidationState, property: string) => {
+        const r = this.runAllValidators(property, prop(property, state), state);
+        return { ...acc, ...r };
+      },
+      {},
+      props,
+    );
     this._validationState = newState;
     return this.allValid(newState);
   };
@@ -162,14 +177,18 @@ export class Validation<S> {
     const zip = converge(this.runAllValidators, [
       prop('key'),
       prop('value'),
-      prop('state')
+      prop('state'),
     ]);
-    const state = reduce((prev: any, current: CustomValidation) => {
-      return {
-        ...prev,
-        ...zip(current)
-      };
-    }, {}, customValidations);
+    const state = reduce(
+      (prev: any, current: CustomValidation) => {
+        return {
+          ...prev,
+          ...zip(current),
+        };
+      },
+      {},
+      customValidations,
+    );
     this._validationState = state;
     return this.allValid(state);
   };
@@ -187,7 +206,7 @@ export class Validation<S> {
         const updated = { ...this._validationState, ...validations };
         this._validationState = updated;
       }
-      return isPropertyValid(property, validations)
+      return isPropertyValid(property, validations);
     }
     return undefined;
   };
@@ -212,7 +231,7 @@ export class Validation<S> {
    * @param state the data controlling the form
    * @return function
    */
-  public validateOnChange = (onChange: Function, state: S) => {
+  public validateOnChange = (onChange: (event: any) => any, state: S) => {
     return (event: any) => {
       const { value, name } = event.target;
       this.validateIfTrue(name, value, state);

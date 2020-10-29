@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useValidation } from '../validations/useValidation';
 import { ValidationSchema, ValidationState } from '../validations/types';
-import {map} from 'ramda';
+import { map } from 'ramda';
 
 const schema: ValidationSchema<any> = {
   name: [
@@ -247,7 +247,7 @@ describe('useValidation tests', () => {
     });
 
     it('handles nested validation reductions', () => {
-      const data = [ defaultState, defaultState, defaultState ];
+      const data = [defaultState, defaultState, defaultState];
       const { result } = renderHook(() => useValidation(schema));
       let output: boolean[];
       act(() => {
@@ -471,7 +471,6 @@ describe('useValidation tests', () => {
         result.current.resetValidationState();
       });
       expect(result.current.isValid).toBe(true);
-
     });
   });
 

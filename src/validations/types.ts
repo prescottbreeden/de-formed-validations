@@ -1,6 +1,4 @@
-interface ValidationFunction<S> {
-  (val: any, state: S): boolean;
-}
+export type ValidationFunction<S> = (val: any, state?: S) => boolean;
 
 interface ValidationProps<S> {
   errorMessage: string;
@@ -26,19 +24,19 @@ export interface ValidationObject<S> {
   validate: (
     property: string,
     value: unknown,
-    state?: S
+    state?: S,
   ) => boolean | undefined;
   validateAll: (state: S, keys?: string[]) => boolean;
   validateCustom: (vals: CustomValidation[]) => boolean;
   validateIfTrue: (
     property: string,
     value: unknown,
-    state?: S
+    state?: S,
   ) => boolean | undefined;
   validateOnBlur: (state: S) => (event: any) => unknown;
   validateOnChange: (
     onChange: (event: any) => unknown,
-    state: S
+    state: S,
   ) => (event: any) => unknown;
   validationErrors: string[];
   validationState: ValidationState;
@@ -49,4 +47,3 @@ export interface CustomValidation {
   value: any;
   state?: any;
 }
-

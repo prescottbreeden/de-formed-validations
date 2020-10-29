@@ -10,7 +10,7 @@ export declare const useValidation: <S>(validationSchema: ValidationSchema<S>) =
     validateCustom: (customValidations: CustomValidation[]) => boolean;
     validateIfTrue: (property: string, value: unknown, state?: S | undefined) => any;
     validateOnBlur: (state: S) => (event: ChangeEvent<HTMLInputElement>) => void;
-    validateOnChange: (onChange: Function, state: S) => (event: ChangeEvent<HTMLInputElement>) => any;
+    validateOnChange: (onChange: (event: any) => any, state: S) => (event: ChangeEvent<HTMLInputElement>) => any;
     validationErrors: string[];
     validationState: ValidationState;
 };

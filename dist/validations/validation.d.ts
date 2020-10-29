@@ -17,5 +17,5 @@ export declare class Validation<S> {
     validateCustom: (customValidations: CustomValidation[]) => boolean;
     validateIfTrue: (property: string, value: unknown, state?: S | undefined) => any;
     validateOnBlur: (state: S) => (event: any) => void;
-    validateOnChange: (onChange: Function, state: S) => (event: any) => any;
+    validateOnChange: (onChange: (event: any) => any, state: S) => (event: any) => any;
 }

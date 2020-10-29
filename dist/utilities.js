@@ -21,5 +21,4 @@ function isPropertyValid(property, validations) {
     return exports.compose(exports.prop('isValid'), exports.prop(property))(validations);
 }
 exports.isPropertyValid = isPropertyValid;
-;
 //# sourceMappingURL=utilities.js.map

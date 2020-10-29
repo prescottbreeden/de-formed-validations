@@ -1,10 +1,12 @@
-import {reduce} from "ramda";
-import {ValidationState} from "./validations/types";
+import { reduce } from 'ramda';
+import { ValidationState } from './validations/types';
+
+type AnyFunction = (...arge: any) => any;
 
 /**
  *  curry :: ((a, b, ...) -> c) -> a -> b -> ... -> c
  */
-function curry(fn: Function) {
+function curry(fn: AnyFunction) {
   const arity = fn.length;
 
   return function $curry(...args: any[]): any {
@@ -19,7 +21,7 @@ function curry(fn: Function) {
 /**
  *  compose :: ((a -> b), (b -> c),  ..., (y -> z)) -> a -> z
  */
-export const compose = (...fns: Function[]) => (...args: any[]) =>
+export const compose = (...fns: AnyFunction[]) => (...args: any[]) =>
   fns.reduceRight((res, fn) => [fn.call(null, ...res)], args)[0];
 
 /**
@@ -38,10 +40,7 @@ export const all = reduce(reduceTruthy, true);
 
 export function isPropertyValid<S>(
   property: keyof S,
-  validations: ValidationState
+  validations: ValidationState,
 ) {
-  return compose(
-    prop('isValid'),
-    prop(property)
-  )(validations);
-};
+  return compose(prop('isValid'), prop(property))(validations);
+}

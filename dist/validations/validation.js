@@ -11,15 +11,13 @@ class Validation {
                 [item]: {
                     isValid: true,
                     error: '',
-                }
+                },
             }), {}, Object.keys(schema));
         };
         this.allValid = (state) => {
             const keys = Object.keys(state);
             const valid = ramda_1.reduce((prev, current) => {
-                return prev
-                    ? utilities_1.isPropertyValid(current, this._validationState)
-                    : prev;
+                return prev ? utilities_1.isPropertyValid(current, this._validationState) : prev;
             }, true, keys);
             return valid;
         };
@@ -32,11 +30,11 @@ class Validation {
                 ? this._validationSchema[property][index].errorMessage
                 : '';
             return {
-                [property]: { isValid, error }
+                [property]: { isValid, error },
             };
         };
         this.getError = (property) => {
-            if ((property) in this._validationSchema) {
+            if (property in this._validationSchema) {
                 const val = utilities_1.compose(utilities_1.prop('error'), utilities_1.prop(property));
                 return val(this._validationState);
             }
@@ -56,7 +54,7 @@ class Validation {
                 const validations = this.runAllValidators(property, value, state);
                 this._validationState = {
                     ...this._validationState,
-                    ...validations
+                    ...validations,
                 };
                 return utilities_1.isPropertyValid(property, validations);
             }
@@ -74,12 +72,12 @@ class Validation {
             const zip = ramda_1.converge(this.runAllValidators, [
                 utilities_1.prop('key'),
                 utilities_1.prop('value'),
-                utilities_1.prop('state')
+                utilities_1.prop('state'),
             ]);
             const state = ramda_1.reduce((prev, current) => {
                 return {
                     ...prev,
-                    ...zip(current)
+                    ...zip(current),
                 };
             }, {}, customValidations);
             this._validationState = state;
