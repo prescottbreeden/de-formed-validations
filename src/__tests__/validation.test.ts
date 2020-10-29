@@ -254,14 +254,20 @@ describe('useValidation tests', () => {
     it('returns a boolean', () => {
       const v = new Validation(weirdSchema);
       let output: boolean | undefined;
-      output = v.validateCustom([{ key: 'namesAreAllBob', value: validNames }]);
+      output = v.validateCustom([
+        { key: 'namesAreAllBob', value: validNames },
+        { key: 'namesAreAllDingo', value: validNames, state: defaultState }
+      ]);
       expect(typeof output).toBe('boolean');
     });
 
     it('returns true if validations pass', () => {
       const v = new Validation(weirdSchema);
       let output: boolean | undefined;
-      output = v.validateCustom([{ key: 'namesAreAllBob', value: validNames }]);
+      output = v.validateCustom([
+        { key: 'namesAreAllBob', value: validNames },
+        { key: 'namesAreAllDingo', value: validNames, state: defaultState }
+      ]);
       expect(output).toBe(true);
     });
 
@@ -271,6 +277,7 @@ describe('useValidation tests', () => {
       let output: boolean | undefined;
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: invalidNames },
+        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState }
       ]);
       expect(output).toBe(false);
     });
@@ -278,7 +285,10 @@ describe('useValidation tests', () => {
     it('updates validation state', () => {
       const v = new Validation(weirdSchema);
       const invalidNames = ['jack', 'bob', 'bob'];
-      v.validateCustom([{ key: 'namesAreAllBob', value: invalidNames }]);
+      v.validateCustom([
+        { key: 'namesAreAllBob', value: invalidNames },
+        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState }
+      ]);
       expect(v.isValid).toBe(false);
     });
 

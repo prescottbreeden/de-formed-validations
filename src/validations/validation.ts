@@ -1,6 +1,6 @@
 import {CustomValidation, ValidationSchema, ValidationState} from './types';
 import { all, compose, isPropertyValid, prop } from '../utilities';
-import { map, reduce } from 'ramda';
+import { converge, map, reduce } from 'ramda';
 
 export class Validation<S> {
   private _validationSchema: ValidationSchema<S>;
@@ -159,17 +159,19 @@ export class Validation<S> {
    * @return boolean
    */
   public validateCustom = (customValidations: CustomValidation[]) => {
-    const newState = reduce((acc: ValidationState, property: CustomValidation) => {
-      const r = this.runAllValidators(
-        prop('key', property),
-        prop('value', property),
-        prop('state', property)
-      );
-      acc = { ...acc, ...r };
-      return acc;
+    const zip = converge(this.runAllValidators, [
+      prop('key'),
+      prop('value'),
+      prop('state')
+    ]);
+    const state = reduce((prev: any, current: CustomValidation) => {
+      return {
+        ...prev,
+        ...zip(current)
+      };
     }, {}, customValidations);
-    this._validationState = newState;
-    return this.allValid(newState);
+    this._validationState = state;
+    return this.allValid(state);
   };
 
   /**

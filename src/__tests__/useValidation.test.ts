@@ -290,6 +290,7 @@ describe('useValidation tests', () => {
       act(() => {
         output = result.current.validateCustom([
           { key: 'namesAreAllBob', value: validNames },
+          { key: 'namesAreAllDingo', value: validNames, state: defaultState },
         ]);
       });
       expect(typeof output).toBe('boolean');
@@ -301,6 +302,7 @@ describe('useValidation tests', () => {
       act(() => {
         output = result.current.validateCustom([
           { key: 'namesAreAllBob', value: validNames },
+          { key: 'namesAreAllDingo', value: validNames, state: defaultState },
         ]);
       });
       expect(output).toBe(true);
@@ -313,6 +315,7 @@ describe('useValidation tests', () => {
       act(() => {
         output = result.current.validateCustom([
           { key: 'namesAreAllBob', value: invalidNames },
+          { key: 'namesAreAllDingo', value: validNames, state: defaultState },
         ]);
       });
       expect(output).toBe(false);
@@ -324,6 +327,7 @@ describe('useValidation tests', () => {
       act(() => {
         result.current.validateCustom([
           { key: 'namesAreAllBob', value: invalidNames },
+          { key: 'namesAreAllDingo', value: validNames, state: defaultState },
         ]);
       });
       expect(result.current.isValid).toBe(false);
@@ -334,7 +338,7 @@ describe('useValidation tests', () => {
       const validNames = ['dingo', 'dingo', 'dingo'];
       act(() => {
         result.current.validateCustom([
-          { key: 'namesAreAllDingo', value: validNames, state: { dingo: true } }
+          { key: 'namesAreAllDingo', value: validNames, state: defaultState },
         ]);
       });
       expect(result.current.isValid).toBe(true);

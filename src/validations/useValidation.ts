@@ -88,13 +88,19 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
    * @return boolean
    */
   const validateCustom = (customValidations: CustomValidation[]) => {
-    const bools = map(
-      converge(validate, [
-        prop('key'),
-        prop('value'),
-        prop('state')
-      ]), customValidations);
-    return all(bools);
+    const zip = converge(runAllValidators, [
+      prop('key'),
+      prop('value'),
+      prop('state')
+    ]);
+    const state = reduce((prev: any, current: CustomValidation) => {
+      return {
+        ...prev,
+        ...zip(current)
+      };
+    }, {}, customValidations);
+    setValidationState(state);
+    return allValid(state);
   };
 
   /**
