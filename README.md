@@ -106,6 +106,22 @@ export const PersonForm = ({ person, onChange }) => {
   );
 };
 ```
+### Node/Express Example
+```js
+const PersonValidation = require(...);
+
+app.use("/", (req, res) => {
+  const v = PersonValidation();
+  const fakePayload = {
+    firstName: "",
+    lastName: ""
+  };
+  v.validateAll(fakePayload);
+  return v.isValid
+    ? res.json('success')
+    : res.json(v.validationState);
+});
+```
 
 ## Documentation
 
