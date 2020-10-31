@@ -2,14 +2,17 @@
 
 De-Formed Validations is an unopinionated API to manage form and data validations in JavaScript.
 
-De-Formed takes a simple schema definition and then provides you with a JavaScript object containing read-only objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed anywhere. Many validation libraries and schemas create a thick layer of properties and flags to stipulate types, required fields, and often try to bundle validation solutions with form and ORM solutions; however, as validation requirements become more complex, these libraries create unneccessary restrictions when all you need is a function that returns true/false.  With De-formed, just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (browser- or server-side). This provides the developer with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
-
 ## Why use De-Formed?
 
-1. Maintain separation between your validation logic, form logic, presentation logic, and/or server logic.
-2. Easily customize validation behavior in contextual and dynamic situations.
-3. Modular approach makes reusing and nested validations a snap.
-4. Light-weight and easy to test.
+De-Formed takes a simple schema definition and generates a JavaScript object containing read-only objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed in any context. Many validation libraries and schemas are either bundled with form and ORM solutions or annoyingly tedious with flags and properties; however, the only thing a validation library needs to do is provide an API that will execute functions which return true/false.  With De-formed, just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
+
+## TL;DR
+
+1. Works for Client or Server.
+2. Maintain separation between your validation logic and your presentation/server logic.
+3. Easily customize validation behavior in contextual and dynamic situations.
+4. Modular approach makes reusing and nested validations a snap.
+5. Decoupled validation functions makes unit testing validation requirements easy.
 
 ## Install
 ```
