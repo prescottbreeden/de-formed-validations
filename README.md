@@ -112,11 +112,7 @@ const PersonValidation = require(...);
 
 app.use("/", (req, res) => {
   const v = PersonValidation();
-  const fakePayload = {
-    firstName: "",
-    lastName: ""
-  };
-  v.validateAll(fakePayload);
+  v.validateAll(req.body);
   return v.isValid
     ? res.json('success')
     : res.json(v.validationState);
