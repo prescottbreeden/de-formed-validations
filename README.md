@@ -1,6 +1,6 @@
 # De-Formed Validations
 
-De-Formed Validations is an unopinionated API to manage form and data validations in JavaScript.
+De-Formed Validations is an unopinionated API to manage form and data validations in JavaScript and React.
 
 ## TL;DR
 
