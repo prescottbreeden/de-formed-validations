@@ -22,7 +22,8 @@ exports.useValidation = (validationSchema) => {
         setValidationState(newValidationState);
     };
     const runAllValidators = (property, value, state) => {
-        const runValidator = utilities_1.compose((func) => func(value, state), utilities_1.prop('validation'));
+        const localState = state ? state : {};
+        const runValidator = utilities_1.compose((func) => func(value, localState), utilities_1.prop('validation'));
         const bools = ramda_1.map(runValidator, utilities_1.prop(property, validationSchema));
         const allValidationsValid = utilities_1.all(bools);
         const index = bools.indexOf(false);

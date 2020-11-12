@@ -28,7 +28,8 @@ class Validation {
             return valid;
         };
         this.runAllValidators = (property, value, state) => {
-            const runValidator = utilities_1.compose((func) => func(value, state), utilities_1.prop('validation'));
+            const localState = state ? state : {};
+            const runValidator = utilities_1.compose((func) => func(value, localState), utilities_1.prop('validation'));
             const bools = ramda_1.map(runValidator, this._validationSchema[property]);
             const isValid = utilities_1.all(bools);
             const index = bools.indexOf(false);
