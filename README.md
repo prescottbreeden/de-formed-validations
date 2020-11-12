@@ -63,7 +63,6 @@ export const PersonValidation = () => {
 
 ```tsx
 // PersonForm.component.tsx
-
 import React from 'react';
 import { PersonValidation } from './PersonValidation';
 
