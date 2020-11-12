@@ -14,6 +14,12 @@ class Validation {
                 },
             }), {}, Object.keys(schema));
         };
+        this.resetValidationState = () => {
+            this._validationState = this.createValidationsState(this._validationSchema);
+        };
+        this.forceValidationState = (newValidationState) => {
+            this._validationState = newValidationState;
+        };
         this.allValid = (state) => {
             const keys = Object.keys(state);
             const valid = ramda_1.reduce((prev, current) => {
@@ -45,9 +51,6 @@ class Validation {
                 return utilities_1.isPropertyValid(property, vState);
             }
             return true;
-        };
-        this.resetValidationState = () => {
-            this._validationState = this.createValidationsState(this._validationSchema);
         };
         this.validate = (property, value, state) => {
             if (property in this._validationSchema) {

@@ -17,6 +17,7 @@ export interface ValidationState {
 }
 
 export interface ValidationObject<S> {
+  forceValidationState: (validationState: ValidationState) => void;
   getError: (property: string) => string;
   getFieldValid: (property: string) => boolean;
   isValid: boolean;

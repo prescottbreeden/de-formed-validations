@@ -14,10 +14,13 @@ exports.useValidation = (validationSchema) => {
             },
         }), {}, Object.keys(schema));
     };
-    const resetValidationState = () => utilities_1.compose(setValidationState, createValidationsState)(validationSchema);
     const [isValid, setIsValid] = react_1.useState(true);
     const [validationState, setValidationState] = react_1.useState(createValidationsState(validationSchema));
     const [validationErrors, setValidationErros] = react_1.useState([]);
+    const resetValidationState = () => utilities_1.compose(setValidationState, createValidationsState)(validationSchema);
+    const forceValidationState = (newValidationState) => {
+        setValidationState(newValidationState);
+    };
     const runAllValidators = (property, value, state) => {
         const runValidator = utilities_1.compose((func) => func(value, state), utilities_1.prop('validation'));
         const bools = ramda_1.map(runValidator, utilities_1.prop(property, validationSchema));
@@ -115,6 +118,7 @@ exports.useValidation = (validationSchema) => {
         setValidationErros(updateErrors(validationState));
     }, [validationState, updateIsValid]);
     return {
+        forceValidationState,
         getError,
         getFieldValid,
         isValid,

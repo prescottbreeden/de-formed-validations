@@ -7,11 +7,12 @@ export declare class Validation<S> {
     get validationState(): ValidationState;
     constructor(props: ValidationSchema<S>);
     private createValidationsState;
+    resetValidationState: () => void;
+    forceValidationState: (newValidationState: ValidationState) => void;
     private allValid;
     private runAllValidators;
     getError: (property: string) => any;
     getFieldValid: (property: string, vState?: ValidationState) => any;
-    resetValidationState: () => void;
     validate: (property: string, value: unknown, state?: S | undefined) => any;
     validateAll: (state: S, props?: string[]) => boolean;
     validateCustom: (customValidations: CustomValidation[]) => boolean;

@@ -1,6 +1,7 @@
 import { ChangeEvent } from 'react';
 import { ValidationSchema, ValidationState, CustomValidation } from './types';
 export declare const useValidation: <S>(validationSchema: ValidationSchema<S>) => {
+    forceValidationState: (newValidationState: ValidationState) => void;
     getError: (property: string, vState?: ValidationState) => any;
     getFieldValid: (property: string, vState?: ValidationState) => any;
     isValid: boolean;

@@ -2,7 +2,7 @@
   "name": "de-formed-validations",
   "description": "Function-based modular validations",
   "author": "Amplify CP",
-  "version": "1.1.15",
+  "version": "1.1.18",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
@@ -23,23 +23,11 @@
   "dependencies": {
     "@types/ramda": "^0.27.30",
     "@types/react": "^16.9.52",
-    "ramda": "^0.27.1",
+    "ramda": "^0.27.1"
+  },
+  "peerDependencies": {
     "react": "^16.13.1"
   },
-  "keywords": [
-    "validations",
-    "data validation",
-    "form validation",
-    "validation",
-    "react",
-    "node",
-    "hook",
-    "frontend",
-    "backend",
-    "modular",
-    "dynamic",
-    "conditional"
-  ],
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -65,5 +53,19 @@
       "tsx",
       "js"
     ]
-  }
+  },
+  "keywords": [
+    "validations",
+    "data validation",
+    "form validation",
+    "validation",
+    "react",
+    "node",
+    "hook",
+    "frontend",
+    "backend",
+    "modular",
+    "dynamic",
+    "conditional"
+  ]
 }
