@@ -110,6 +110,41 @@ export const PersonForm = ({ person, onChange }) => {
 ```
 ### Node/Express Example
 ```js
+// PersonValidation.js
+import { Validation } from 'de-formed-validations';
+
+export const PersonValidation = () => {
+  return new Validation<Person>({
+    firstName: [
+      {
+        errorMessage: 'First Name is required.',
+        validation: (val: string) => val.length > 0,
+      },
+      {
+        errorMessage: 'First Name cannot be longer than 20 characters.',
+        validation: (val: string) => val.length <= 20,
+      },
+    ],
+    lastName: [
+      {
+        errorMessage: 'Last Name is required.',
+        validation: (val: string) => val.length > 0,
+      },
+      {
+        errorMessage: 'Last Name cannot be longer than 20 characters.',
+        validation: (val: string) => val.length <= 20,
+      },
+      {
+        errorMessage: 'Must be Ross if fist name is Bob.',
+        validation: (val: string, state: Person) => {
+          return state.firstName === 'Bob' ? val === 'Ross' : true;
+        },
+      },
+    ],
+  });
+};
+```
+```js
 const PersonValidation = require('./PersonValidation');
 
 app.use("/", (req, res) => {
