@@ -17,7 +17,7 @@ yarn add de-formed-validations
 ```
 npm install de-formed-validations
 ```
-## Usage
+## React Usage
 
 ### Step 1: Create a file to define your validations.
 
@@ -59,7 +59,7 @@ export const PersonValidation = () => {
 };
 ```
 
-### Step 2: Plug and Play
+### Step 2: Plug into React Component
 
 ```tsx
 // PersonForm.component.tsx
@@ -108,7 +108,10 @@ export const PersonForm = ({ person, onChange }) => {
   );
 };
 ```
-### Node/Express Example
+## Node/Express or Vanilla JavaScript Usage
+
+### Step 1: Create a file to define your validations.
+
 ```js
 // PersonValidation.js
 import { Validation } from 'de-formed-validations';
@@ -144,7 +147,11 @@ export const PersonValidation = () => {
   });
 };
 ```
+
+### Step 2: Import as needed
+
 ```js
+// controller.js
 const PersonValidation = require('./PersonValidation');
 
 app.use("/", (req, res) => {
