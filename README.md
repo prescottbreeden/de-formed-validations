@@ -4,7 +4,7 @@ De-Formed Validations is an unopinionated API to manage form and data validation
 
 ## Why use De-Formed?
 
-De-Formed takes a simple schema definition and generates a JavaScript object containing read-only objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed in any context. Many validation libraries and schemas are either bundled with form and ORM solutions or annoyingly tedious with flags and properties; however, the only thing a validation library needs to do is provide an API that will execute functions which return true/false.  With De-formed, just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
+De-Formed takes a simple schema definition and generates a JavaScript object containing read-only objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed in any context. Just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
 
 ## TL;DR
 
@@ -12,7 +12,7 @@ De-Formed takes a simple schema definition and generates a JavaScript object con
 2. Maintain separation between your validation logic and your presentation/server logic.
 3. Easily customize validation behavior in contextual and dynamic situations.
 4. Modular approach makes reusing and nested validations a snap.
-5. Decoupled validation functions makes unit testing validation requirements easy.
+5. De-coupled validation functions makes unit testing validation requirements easy.
 
 ## Install
 ```
