@@ -1,4 +1,4 @@
-export type ValidationFunction<S> = (val: any, state: S | undefined) => boolean | ((val: any) => boolean);
+export type ValidationFunction<S> = (val: any, state: S) => boolean | ((val: any) => boolean);
 
 interface ValidationProps<S> {
   errorMessage: string;
