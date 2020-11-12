@@ -12,7 +12,7 @@ De-Formed takes a simple schema definition and generates a JavaScript object con
 2. Maintain separation between your validation logic and your presentation/server logic.
 3. Easily customize validation behavior in contextual and dynamic situations.
 4. Modular approach makes reusing and nested validations a snap.
-5. Decoupled validation functions makes unit testing validation requirements easy.
+5. De-coupled validation functions makes unit testing validation requirements easy.
 
 ## Install
 ```
