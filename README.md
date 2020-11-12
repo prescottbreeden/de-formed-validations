@@ -10,10 +10,6 @@ De-Formed Validations is an unopinionated API to manage form and data validation
 4. Modular approach makes reusing and nested validations a snap.
 5. De-coupled validation functions makes unit testing validation requirements easy.
 
-## Why use De-Formed?
-
-De-Formed takes a simple schema and generates objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed and reused in any context needed. Just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself. If you are using Node for the Server, you can also return the validation state directly to the Client to automatically display errors on their corresponding fields. 
-
 ## Install
 ```
 yarn add de-formed-validations
@@ -124,6 +120,9 @@ app.use("/", (req, res) => {
     : res.json(v.validationState);
 });
 ```
+## Why use De-Formed?
+
+De-Formed takes a simple schema and generates objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed and reused in any context needed. Just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself. If you are using Node for the Server, you can also return the validation state directly to the Client to automatically display errors on their corresponding fields. 
 
 ## Documentation
 
