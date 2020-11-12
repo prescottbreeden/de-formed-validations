@@ -87,8 +87,9 @@ export class Validation<S> {
    * @return true/false validation
    */
   private runAllValidators = (property: string, value: any, state?: S) => {
+    const localState = state ? state : {} as S;
     const runValidator = compose(
-      (func: ValidationFunction<S>) => func(value, state),
+      (func: ValidationFunction<S>) => func(value, localState),
       prop('validation'),
     );
     const bools: boolean[] = map(
