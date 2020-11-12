@@ -74,6 +74,7 @@ describe('useValidation tests', () => {
     const { result } = renderHook(() => useValidation(schema));
     expect(result.current.validationState).toStrictEqual(mockValidationState);
     expect(Object.keys(result.current)).toStrictEqual([
+      'forceValidationState',
       'getError',
       'getFieldValid',
       'isValid',
@@ -321,24 +322,41 @@ describe('useValidation tests', () => {
       expect(output).toBe(false);
     });
 
-    it('updates validation state', () => {
+    it('handles crazy nested reducers', () => {
       const { result } = renderHook(() => useValidation(weirdSchema));
-      const invalidNames = ['jack', 'bob', 'bob'];
+      const matrix = [
+        ['jack', 'bob', 'bob'],
+        ['jack', 'bob', 'bob'],
+      ];
       act(() => {
-        result.current.validateCustom([
-          { key: 'namesAreAllBob', value: invalidNames },
+        const output = matrix.reduce((prev: any, curr: any) => {
+          if (!prev) return prev;
+          return result.current.validateCustom([
+            { key: 'namesAreAllBob', value: curr },
+          ]);
+        }, true);
+        expect(output).toBe(false);
+      });
+    });
+
+    it('returns a boolean', () => {
+      const { result } = renderHook(() => useValidation(weirdSchema));
+      let output: boolean | undefined;
+      act(() => {
+        output = result.current.validateCustom([
+          { key: 'namesAreAllBob', value: validNames },
           { key: 'namesAreAllDingo', value: validNames, state: defaultState },
         ]);
       });
-      expect(result.current.isValid).toBe(false);
+      expect(typeof output).toBe('boolean');
     });
 
     it('takes an optional object for second argument', () => {
       const { result } = renderHook(() => useValidation(weirdSchema));
-      const validNames = ['dingo', 'dingo', 'dingo'];
+      const dingos = ['dingo', 'dingo', 'dingo'];
       act(() => {
         result.current.validateCustom([
-          { key: 'namesAreAllDingo', value: validNames, state: defaultState },
+          { key: 'namesAreAllDingo', value: dingos, state: defaultState },
         ]);
       });
       expect(result.current.isValid).toBe(true);
@@ -445,7 +463,7 @@ describe('useValidation tests', () => {
         result.current.validate('name', 'bob', defaultState);
       });
       expect(result.current.isValid).toBe(false);
-      const onChange = (event: any) => 'bob ross';
+      const onChange = () => 'bob ross';
       const handleChange = result.current.validateOnChange(onChange, state);
       const event = {
         target: {
@@ -495,4 +513,16 @@ describe('useValidation tests', () => {
       expect(result.current.validationErrors).toStrictEqual([]);
     });
   });
+
+  // describe('forceValidationState', () => {
+  //   it('overrides the existing validation state with a new one', () => {
+  //     const { result: v1 } = renderHook(() => useValidation(schema));
+  //     const { result: v2 } = renderHook(() => useValidation(schema));
+  //     act(() => {
+  //       v1.current.validateAll(failingState);
+  //       v2.current.forceValidationState(v1.current.validationState);
+  //     });
+  //     expect(v1.current.validationState).toStrictEqual(v2.current.validationState);
+  //   });
+  // });
 });

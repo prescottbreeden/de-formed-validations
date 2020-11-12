@@ -30,11 +30,6 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     );
   };
 
-  /**
-   *  Resets the validation state.
-   */
-  const resetValidationState = (): void =>
-    compose(setValidationState, createValidationsState)(validationSchema);
 
   // -- isValid and validationState ---------------------------------------
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -42,6 +37,21 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
     createValidationsState(validationSchema),
   );
   const [validationErrors, setValidationErros] = useState<string[]>([]);
+
+  /**
+   *  Resets the validation state.
+   */
+  const resetValidationState = (): void =>
+    compose(setValidationState, createValidationsState)(validationSchema);
+
+  /**
+   *  Overrides the existing validation state with another. WARNING: this feature
+   *  is experimental and may be removed in future versions.
+   *  @param newValidationState ValidationState
+   */
+  const forceValidationState = (newValidationState: ValidationState): void => {
+    setValidationState(newValidationState);
+  };
 
   /**
    * Executes the value against all provided validation functions and updates
@@ -250,6 +260,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>) => {
   }, [validationState, updateIsValid]);
 
   return {
+    forceValidationState,
     getError,
     getFieldValid,
     isValid,

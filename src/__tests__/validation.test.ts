@@ -73,11 +73,12 @@ describe('useValidation tests', () => {
     expect(v.validationState).toStrictEqual(mockValidationState);
     expect(Object.keys(v)).toStrictEqual([
       'createValidationsState',
+      'resetValidationState',
+      'forceValidationState',
       'allValid',
       'runAllValidators',
       'getError',
       'getFieldValid',
-      'resetValidationState',
       'validate',
       'validateAll',
       'validateCustom',
@@ -250,10 +251,10 @@ describe('useValidation tests', () => {
         },
       ],
     };
-    const validNames = ['bob', 'bob', 'bob'];
     it('returns a boolean', () => {
       const v = new Validation(weirdSchema);
       let output: boolean | undefined;
+      const validNames = ['bob', 'bob', 'bob'];
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: validNames },
         { key: 'namesAreAllDingo', value: validNames, state: defaultState },
@@ -264,6 +265,7 @@ describe('useValidation tests', () => {
     it('returns true if validations pass', () => {
       const v = new Validation(weirdSchema);
       let output: boolean | undefined;
+      const validNames = ['bob', 'bob', 'bob'];
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: validNames },
         { key: 'namesAreAllDingo', value: validNames, state: defaultState },
@@ -389,7 +391,7 @@ describe('useValidation tests', () => {
       const state = defaultState;
       v.validate('name', 'bob', defaultState);
       expect(v.isValid).toBe(false);
-      const onChange = (event: any) => 'bob ross';
+      const onChange = () => 'bob ross';
       const handleChange = v.validateOnChange(onChange, state);
       const event = {
         target: {
@@ -443,6 +445,16 @@ describe('useValidation tests', () => {
       v.validateAll(failingState);
       v.validateAll(defaultState);
       expect(v.validationErrors).toStrictEqual([]);
+    });
+  });
+
+  describe('forceValidationState', () => {
+    it('overrides the existing validation state with a new one', () => {
+      const v1 = new Validation(schema);
+      const v2 = new Validation(schema);
+      v1.validateAll(failingState);
+      v2.forceValidationState(v1.validationState);
+      expect(v1.validationState).toStrictEqual(v2.validationState);
     });
   });
 });

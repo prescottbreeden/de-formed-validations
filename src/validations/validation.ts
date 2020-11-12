@@ -51,6 +51,22 @@ export class Validation<S> {
     );
   };
 
+  /**
+   *  Resets the validation state.
+   */
+  public resetValidationState = (): void => {
+    this._validationState = this.createValidationsState(this._validationSchema);
+  };
+
+  /**
+   *  Overrides the existing validation state with another. WARNING: this feature
+   *  is experimental and may be removed in future versions.
+   *  @param newValidationState ValidationState
+   */
+  public forceValidationState = (newValidationState: ValidationState): void => {
+    this._validationState = newValidationState;
+  };
+
   private allValid = (state: ValidationState) => {
     const keys = Object.keys(state);
     const valid = reduce(
@@ -118,10 +134,6 @@ export class Validation<S> {
       return isPropertyValid(property, vState);
     }
     return true;
-  };
-
-  public resetValidationState = (): void => {
-    this._validationState = this.createValidationsState(this._validationSchema);
   };
 
   /**
