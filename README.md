@@ -117,30 +117,30 @@ export const PersonForm = ({ person, onChange }) => {
 import { Validation } from 'de-formed-validations';
 
 export const PersonValidation = () => {
-  return new Validation<Person>({
+  return new Validation({
     firstName: [
       {
         errorMessage: 'First Name is required.',
-        validation: (val: string) => val.length > 0,
+        validation: val => val.length > 0,
       },
       {
         errorMessage: 'First Name cannot be longer than 20 characters.',
-        validation: (val: string) => val.length <= 20,
+        validation: val => val.length <= 20,
       },
     ],
     lastName: [
       {
         errorMessage: 'Last Name is required.',
-        validation: (val: string) => val.length > 0,
+        validation: val => val.length > 0,
       },
       {
         errorMessage: 'Last Name cannot be longer than 20 characters.',
-        validation: (val: string) => val.length <= 20,
+        validation: val => val.length <= 20,
       },
       {
         errorMessage: 'Must be Ross if fist name is Bob.',
-        validation: (val: string, state: Person) => {
-          return state.firstName === 'Bob' ? val === 'Ross' : true;
+        validation: (val, person) => {
+          return person.firstName === 'Bob' ? val === 'Ross' : true;
         },
       },
     ],
