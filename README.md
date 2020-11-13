@@ -1,6 +1,6 @@
 # De-Formed Validations
 
-De-Formed Validations is an unopinionated API to manage form and data validations in JavaScript and React.
+De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React.  De-formed allows you 100% validation customization with almost zero learning curve and is built to scale. 
 
 ## TL;DR
 
@@ -163,7 +163,9 @@ app.use("/", (req, res) => {
 ```
 ## Why use De-Formed?
 
-De-Formed takes a simple schema and generates objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed and reused in any context needed. Just define as many functions as you find necessary in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself. If you are using Node for the Server, you can also return the validation state directly to the Client to automatically display errors on their corresponding fields. 
+Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable the more complex the requirements become. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as updating the DOM with proper error messaging. Some of our clients have products which are 200k lines of code and 99% form data, and so our requirements for validations were 1) must be composable and reusable, 2) must be easy enough to learn in a day, 3) powerful enough to handle any level of complexity, and 4) easy to unit test.
+
+De-Formed takes a simple schema and generates objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed, reused, and composed together in any context necessary. Just define as many functions as you want in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself. If you are using Node for the Server, you can also return the validation state directly to the Client to automatically display errors on their corresponding fields. 
 
 ## Documentation
 
