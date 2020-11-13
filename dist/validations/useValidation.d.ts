@@ -2,7 +2,8 @@ import { ChangeEvent } from 'react';
 import { ValidationSchema, ValidationState, CustomValidation } from './types';
 export declare const useValidation: <S>(validationSchema: ValidationSchema<S>) => {
     forceValidationState: (newValidationState: ValidationState) => void;
-    getError: (property: keyof S, vState?: ValidationState) => any;
+    getAllErrors: (property: keyof S, vState?: ValidationState) => string[];
+    getError: (property: keyof S, vState?: ValidationState) => string | null;
     getFieldValid: (property: keyof S, vState?: ValidationState) => any;
     isValid: boolean;
     resetValidationState: () => void;

@@ -6,11 +6,11 @@ const ramda_1 = require("ramda");
 class Validation {
     constructor(props) {
         this.createValidationsState = (schema) => {
-            return ramda_1.reduce((prev, item) => ({
-                ...prev,
+            return ramda_1.reduce((acc, item) => ({
+                ...acc,
                 [item]: {
                     isValid: true,
-                    error: '',
+                    errors: [],
                 },
             }), {}, Object.keys(schema));
         };
@@ -22,30 +22,42 @@ class Validation {
         };
         this.allValid = (state) => {
             const keys = Object.keys(state);
-            const valid = ramda_1.reduce((prev, current) => {
-                return prev ? utilities_1.isPropertyValid(current, this._validationState) : prev;
+            const valid = ramda_1.reduce((acc, current) => {
+                return acc ? utilities_1.isPropertyValid(current, this._validationState) : acc;
             }, true, keys);
             return valid;
         };
         this.runAllValidators = (property, value, state) => {
             const localState = state ? state : {};
             const runValidator = utilities_1.compose((func) => func(value, localState), utilities_1.prop('validation'));
-            const bools = ramda_1.map(runValidator, this._validationSchema[property]);
-            const isValid = utilities_1.all(bools);
-            const index = bools.indexOf(false);
-            const error = index > -1
-                ? this._validationSchema[property][index].errorMessage
-                : '';
+            const bools = ramda_1.map(runValidator, utilities_1.prop(property, this._validationSchema));
+            const allValidationsValid = utilities_1.all(bools);
+            const errors = bools.reduce((acc, curr, idx) => {
+                const errorOf = utilities_1.compose(utilities_1.prop('errorMessage'), utilities_1.prop(idx), utilities_1.prop(property));
+                return curr
+                    ? acc
+                    : [...acc, errorOf(this._validationSchema)];
+            }, []);
             return {
-                [property]: { isValid, error },
+                [property]: {
+                    isValid: allValidationsValid,
+                    errors: allValidationsValid ? [] : errors
+                },
             };
         };
         this.getError = (property) => {
             if (property in this._validationSchema) {
-                const val = utilities_1.compose(utilities_1.prop('error'), utilities_1.prop(property));
+                const val = utilities_1.compose(ramda_1.head, utilities_1.prop('errors'), utilities_1.prop(property));
+                return val(this._validationState) ? val(this._validationState) : null;
+            }
+            return null;
+        };
+        this.getAllErrors = (property) => {
+            if (property in this._validationSchema) {
+                const val = utilities_1.compose(utilities_1.prop('errors'), utilities_1.prop(property));
                 return val(this._validationState);
             }
-            return '';
+            return [];
         };
         this.getFieldValid = (property, vState = this._validationState) => {
             if (property in this._validationSchema) {
@@ -62,7 +74,7 @@ class Validation {
                 };
                 return utilities_1.isPropertyValid(property, validations);
             }
-            return undefined;
+            return null;
         };
         this.validateAll = (state, props = Object.keys(this._validationSchema)) => {
             const newState = ramda_1.reduce((acc, property) => {
@@ -78,9 +90,9 @@ class Validation {
                 utilities_1.prop('value'),
                 utilities_1.prop('state'),
             ]);
-            const state = ramda_1.reduce((prev, current) => {
+            const state = ramda_1.reduce((acc, current) => {
                 return {
-                    ...prev,
+                    ...acc,
                     ...zip(current),
                 };
             }, {}, customValidations);
@@ -96,7 +108,7 @@ class Validation {
                 }
                 return utilities_1.isPropertyValid(property, validations);
             }
-            return undefined;
+            return null;
         };
         this.validateOnBlur = (state) => {
             return (event) => {
@@ -119,9 +131,9 @@ class Validation {
     }
     get validationErrors() {
         const props = Object.keys(this._validationState);
-        const errors = ramda_1.reduce((prev, curr) => {
+        const errors = ramda_1.reduce((acc, curr) => {
             const err = this.getError(curr);
-            return err ? [...prev, err] : prev;
+            return err ? [...acc, err] : acc;
         }, [], props);
         return errors;
     }

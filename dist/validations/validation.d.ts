@@ -11,12 +11,13 @@ export declare class Validation<S> {
     forceValidationState: (newValidationState: ValidationState) => void;
     private allValid;
     private runAllValidators;
-    getError: (property: string) => any;
-    getFieldValid: (property: string, vState?: ValidationState) => any;
-    validate: (property: string, value: unknown, state?: S | undefined) => any;
-    validateAll: (state: S, props?: string[]) => boolean;
+    getError: (property: keyof S) => string | null;
+    getAllErrors: (property: keyof S) => string[];
+    getFieldValid: (property: keyof S, vState?: ValidationState) => any;
+    validate: (property: keyof S, value: unknown, state?: S | undefined) => any;
+    validateAll: (state: S, props?: (keyof S)[]) => boolean;
     validateCustom: (customValidations: CustomValidation[]) => boolean;
-    validateIfTrue: (property: string, value: unknown, state?: S | undefined) => any;
+    validateIfTrue: (property: keyof S, value: unknown, state?: S | undefined) => any;
     validateOnBlur: (state: S) => (event: any) => void;
     validateOnChange: (onChange: (event: any) => any, state: S) => (event: any) => any;
 }

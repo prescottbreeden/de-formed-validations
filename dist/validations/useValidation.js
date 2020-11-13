@@ -6,11 +6,11 @@ const utilities_1 = require("../utilities");
 const ramda_1 = require("ramda");
 exports.useValidation = (validationSchema) => {
     const createValidationsState = (schema) => {
-        return ramda_1.reduce((prev, key) => ({
-            ...prev,
+        return ramda_1.reduce((acc, key) => ({
+            ...acc,
             [key]: {
                 isValid: true,
-                error: '',
+                errors: [],
             },
         }), {}, Object.keys(schema));
     };
@@ -26,12 +26,17 @@ exports.useValidation = (validationSchema) => {
         const runValidator = utilities_1.compose((func) => func(value, localState), utilities_1.prop('validation'));
         const bools = ramda_1.map(runValidator, utilities_1.prop(property, validationSchema));
         const allValidationsValid = utilities_1.all(bools);
-        const index = bools.indexOf(false);
-        const error = index > -1
-            ? validationSchema[property][index].errorMessage
-            : '';
+        const errors = bools.reduce((acc, curr, idx) => {
+            const errorOf = utilities_1.compose(utilities_1.prop('errorMessage'), utilities_1.prop(idx), utilities_1.prop(property));
+            return curr
+                ? acc
+                : [...acc, errorOf(validationSchema)];
+        }, []);
         return {
-            [property]: { isValid: allValidationsValid, error },
+            [property]: {
+                isValid: allValidationsValid,
+                errors: allValidationsValid ? [] : errors
+            },
         };
     };
     const validate = (property, value, state) => {
@@ -41,7 +46,7 @@ exports.useValidation = (validationSchema) => {
             setValidationState(updated);
             return utilities_1.isPropertyValid(property, validations);
         }
-        return undefined;
+        return null;
     };
     const validateCustom = (customValidations) => {
         const zip = ramda_1.converge(runAllValidators, [
@@ -49,8 +54,8 @@ exports.useValidation = (validationSchema) => {
             utilities_1.prop('value'),
             utilities_1.prop('state'),
         ]);
-        const state = ramda_1.reduce((prev, current) => {
-            return ramda_1.mergeRight(prev, zip(current));
+        const state = ramda_1.reduce((acc, current) => {
+            return ramda_1.mergeRight(acc, zip(current));
         }, {}, customValidations);
         setValidationState(state);
         return allValid(state);
@@ -63,7 +68,7 @@ exports.useValidation = (validationSchema) => {
             }
             return utilities_1.isPropertyValid(property, validations);
         }
-        return undefined;
+        return null;
     };
     const validateOnBlur = (state) => (event) => {
         const { value, name } = event.target;
@@ -85,10 +90,17 @@ exports.useValidation = (validationSchema) => {
     };
     const getError = (property, vState = validationState) => {
         if (property in validationSchema) {
-            const val = utilities_1.compose(utilities_1.prop('error'), utilities_1.prop(property));
-            return val(vState) ? val(vState) : '';
+            const val = utilities_1.compose(ramda_1.head, utilities_1.prop('errors'), utilities_1.prop(property));
+            return val(vState) ? val(vState) : null;
         }
-        return '';
+        return null;
+    };
+    const getAllErrors = (property, vState = validationState) => {
+        if (property in validationSchema) {
+            const val = utilities_1.compose(utilities_1.prop('errors'), utilities_1.prop(property));
+            return val(vState);
+        }
+        return [];
     };
     const getFieldValid = (property, vState = validationState) => {
         if (property in validationSchema) {
@@ -98,13 +110,13 @@ exports.useValidation = (validationSchema) => {
         return true;
     };
     const allValid = (state) => {
-        return ramda_1.reduce((prev, curr) => {
-            return prev ? utilities_1.isPropertyValid(curr, state) : prev;
+        return ramda_1.reduce((acc, curr) => {
+            return acc ? utilities_1.isPropertyValid(curr, state) : acc;
         }, true, Object.keys(state));
     };
     const generateValidationErrors = (state) => {
-        return ramda_1.reduce((prev, curr) => {
-            return getError(curr) ? [...prev, getError(curr)] : prev;
+        return ramda_1.reduce((acc, curr) => {
+            return getError(curr) ? [...acc, getError(curr)] : acc;
         }, [], Object.keys(state));
     };
     const updateIsValid = react_1.useCallback(allValid, [validationState]);
@@ -115,6 +127,7 @@ exports.useValidation = (validationSchema) => {
     }, [validationState, updateIsValid]);
     return {
         forceValidationState,
+        getAllErrors,
         getError,
         getFieldValid,
         isValid,

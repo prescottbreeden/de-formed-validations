@@ -13,8 +13,8 @@ function curry(fn) {
 }
 exports.compose = (...fns) => (...args) => fns.reduceRight((res, fn) => [fn.call(null, ...res)], args)[0];
 exports.prop = curry((p, obj) => (obj ? obj[p] : undefined));
-const reduceTruthy = (prev, current) => {
-    return !!current ? prev : false;
+const reduceTruthy = (acc, current) => {
+    return current ? acc : false;
 };
 exports.all = ramda_1.reduce(reduceTruthy, true);
 function isPropertyValid(property, validations) {

@@ -2,7 +2,7 @@
   "name": "de-formed-validations",
   "description": "Function-based modular validations",
   "author": "Amplify CP",
-  "version": "1.1.22",
+  "version": "2.0.0",
   "main": "dist/index",
   "license": "MIT",
   "repository": {
@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "jest",
+    "coverage": "jest --coverage --watchAll",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",

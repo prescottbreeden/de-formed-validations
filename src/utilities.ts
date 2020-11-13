@@ -29,12 +29,12 @@ export const compose = (...fns: AnyFunction[]) => (...args: any[]) =>
  */
 export const prop = curry((p: string, obj: any) => (obj ? obj[p] : undefined));
 
-const reduceTruthy = (prev: any, current: any) => {
-  return !!current ? prev : false;
+const reduceTruthy = (acc: boolean, current: boolean) => {
+  return current ? acc : false;
 };
 
 /**
- *  all :: [bool] -> bool
+ *  all :: [boolean] -> boolean
  */
 export const all = reduce(reduceTruthy, true);
 

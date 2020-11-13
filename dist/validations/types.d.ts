@@ -9,7 +9,7 @@ export interface ValidationSchema<S> {
 export interface ValidationState {
     [key: string]: {
         isValid: boolean;
-        error: string;
+        errors: string[];
     };
 }
 export interface ValidationObject<S> {
