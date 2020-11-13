@@ -163,12 +163,12 @@ app.use("/", (req, res) => {
 ```
 ## Why use De-Formed?
 
-Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable the more complex the requirements become. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as updating the DOM with proper error messaging. Some of our clients have products which are 200k lines of code and 99% form data, and so our requirements for validations were that is must be: 
+Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, lines of code should never be confused with readability. Ultimately our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable as requirements become more complex. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as updating the DOM with proper error messaging. Some of our clients have products which are 200k lines of code and 99% form data, and so our requirements for validations were that is must be: 
 
-* 1) composable and reusable
-* 2) easy enough to learn in a day
-* 3) powerful enough to handle any level of complexity
-* 4) easy to unit test.
+* Composable
+* Easy enough to learn in a day
+* Powerful enough to handle any level of complexity
+* Easy to unit test
 
 De-Formed takes a simple schema and generates objects and functions to handle validation-related tasks. All validations are de-coupled from your form and controller architecture allowing them to be executed, reused, and composed together in any context necessary. Just define as many functions as you want in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself. If you are using Node for the Server, you can also return the validation state directly to the Client to automatically display errors on their corresponding fields. 
 
