@@ -3,7 +3,13 @@ import { useValidation } from '../validations/useValidation';
 import { ValidationSchema, ValidationState } from '../validations/types';
 import { map } from 'ramda';
 
-const schema: ValidationSchema<any> = {
+type TestSchema = {
+  name: string;
+  age: number;
+  dingo?: boolean;
+}
+
+const schema: ValidationSchema<TestSchema> = {
   name: [
     {
       errorMessage: 'Name is required.',
@@ -99,7 +105,7 @@ describe('useValidation tests', () => {
 
     it('returns an empty string if the property does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
-      const output = result.current.getError('balls');
+      const output = result.current.getError('balls' as keyof TestSchema);
       expect(output).toBe('');
     });
 
@@ -125,7 +131,7 @@ describe('useValidation tests', () => {
 
     it('returns true if the property does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
-      const output = result.current.getFieldValid('balls');
+      const output = result.current.getFieldValid('balls' as keyof TestSchema);
       expect(output).toBe(true);
     });
 
@@ -190,7 +196,7 @@ describe('useValidation tests', () => {
 
     it('returns undefined if key does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
-      const name = 'balls';
+      const name = 'balls' as keyof TestSchema;
       const value = 'bob';
       const state = defaultState;
       let output: boolean | undefined;
@@ -211,7 +217,7 @@ describe('useValidation tests', () => {
       };
       const name = 'name';
       const value = 'chuck';
-      const state = { dingo: true };
+      const state = { dingo: true } as TestSchema;
       act(() => {
         result.current.validate(name, value, state);
       });
@@ -255,6 +261,18 @@ describe('useValidation tests', () => {
         output = map(result.current.validateAll, data);
         expect(output).toStrictEqual([true, true, true]);
       });
+    });
+
+    it('validates a subsection of keys', () => {
+      const { result } = renderHook(() => useValidation(schema));
+      act(() => {
+        result.current.validateAll(failingState);
+      });
+      expect(result.current.getError('age')).toBe('Must be 18');
+      act(() => {
+        result.current.validateAll(failingState, ['name']);
+      });
+      expect(result.current.getError('age')).toBe('Must be 18');
     });
   });
 
@@ -378,7 +396,7 @@ describe('useValidation tests', () => {
 
     it('returns undefined if key does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
-      const name = 'balls';
+      const name = 'balls' as keyof TestSchema;
       const value = 'bob';
       const state = defaultState;
       let output: boolean | undefined;
@@ -395,7 +413,7 @@ describe('useValidation tests', () => {
       };
       const name = 'name';
       const value = 'chuck';
-      const state = { dingo: true };
+      const state = { dingo: true } as TestSchema;
       act(() => {
         result.current.validateIfTrue(name, value, state);
       });
@@ -514,15 +532,17 @@ describe('useValidation tests', () => {
     });
   });
 
-  // describe('forceValidationState', () => {
-  //   it('overrides the existing validation state with a new one', () => {
-  //     const { result: v1 } = renderHook(() => useValidation(schema));
-  //     const { result: v2 } = renderHook(() => useValidation(schema));
-  //     act(() => {
-  //       v1.current.validateAll(failingState);
-  //       v2.current.forceValidationState(v1.current.validationState);
-  //     });
-  //     expect(v1.current.validationState).toStrictEqual(v2.current.validationState);
-  //   });
-  // });
+  describe('forceValidationState', () => {
+    it('overrides the existing validation state with a new one', () => {
+      const { result: v1 } = renderHook(() => useValidation(schema));
+      const { result: v2 } = renderHook(() => useValidation(schema));
+      act(() => {
+        v1.current.validateAll(failingState);
+      });
+      act(() => {
+        v2.current.forceValidationState(v1.current.validationState);
+      })
+      expect(v1.current.validationState).toStrictEqual(v2.current.validationState);
+    });
+  });
 });

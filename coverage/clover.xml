@@ -1,109 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1605213108412" clover="3.2.0">
-  <project timestamp="1605213108412" name="All files">
-    <metrics statements="169" coveredstatements="168" conditionals="49" coveredconditionals="48" methods="57" coveredmethods="56" elements="275" coveredelements="272" complexity="0" loc="169" ncloc="169" packages="2" files="3" classes="3"/>
+<coverage generated="1605243814003" clover="3.2.0">
+  <project timestamp="1605243814003" name="All files">
+    <metrics statements="170" coveredstatements="170" conditionals="49" coveredconditionals="49" methods="57" coveredmethods="57" elements="276" coveredelements="276" complexity="0" loc="170" ncloc="170" packages="2" files="3" classes="3"/>
     <package name="src">
-      <metrics statements="14" coveredstatements="14" conditionals="6" coveredconditionals="5" methods="8" coveredmethods="8"/>
+      <metrics statements="14" coveredstatements="14" conditionals="6" coveredconditionals="6" methods="8" coveredmethods="8"/>
       <file name="utilities.ts" path="/home/pb1337/source/repos/de-formed-validations/src/utilities.ts">
-        <metrics statements="14" coveredstatements="14" conditionals="6" coveredconditionals="5" methods="8" coveredmethods="8"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="10" count="2" type="stmt"/>
-        <line num="12" count="2" type="stmt"/>
-        <line num="13" count="1898" type="cond" truecount="2" falsecount="0"/>
-        <line num="14" count="828" type="stmt"/>
-        <line num="17" count="1070" type="stmt"/>
-        <line num="24" count="439" type="stmt"/>
-        <line num="25" count="1120" type="stmt"/>
-        <line num="30" count="1070" type="cond" truecount="1" falsecount="1"/>
-        <line num="32" count="2" type="stmt"/>
-        <line num="33" count="175" type="cond" truecount="2" falsecount="0"/>
-        <line num="39" count="2" type="stmt"/>
-        <line num="41" count="2" type="stmt"/>
-        <line num="45" count="210" type="stmt"/>
+        <metrics statements="14" coveredstatements="14" conditionals="6" coveredconditionals="6" methods="8" coveredmethods="8"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="13" count="2110" type="cond" truecount="2" falsecount="0"/>
+        <line num="14" count="907" type="stmt"/>
+        <line num="17" count="1203" type="stmt"/>
+        <line num="24" count="481" type="stmt"/>
+        <line num="25" count="1252" type="stmt"/>
+        <line num="30" count="1203" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="3" type="stmt"/>
+        <line num="33" count="186" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="45" count="223" type="stmt"/>
       </file>
     </package>
     <package name="src.validations">
-      <metrics statements="155" coveredstatements="154" conditionals="43" coveredconditionals="43" methods="49" coveredmethods="48"/>
+      <metrics statements="156" coveredstatements="156" conditionals="43" coveredconditionals="43" methods="49" coveredmethods="49"/>
       <file name="useValidation.ts" path="/home/pb1337/source/repos/de-formed-validations/src/validations/useValidation.ts">
-        <metrics statements="78" coveredstatements="77" conditionals="23" coveredconditionals="23" methods="24" coveredmethods="23"/>
+        <metrics statements="79" coveredstatements="79" conditionals="23" coveredconditionals="23" methods="24" coveredmethods="24"/>
         <line num="1" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
-        <line num="19" count="120" type="stmt"/>
-        <line num="20" count="121" type="stmt"/>
-        <line num="21" count="242" type="stmt"/>
-        <line num="35" count="120" type="stmt"/>
-        <line num="36" count="120" type="stmt"/>
-        <line num="39" count="120" type="stmt"/>
-        <line num="44" count="120" type="stmt"/>
+        <line num="19" count="134" type="stmt"/>
+        <line num="20" count="135" type="stmt"/>
+        <line num="21" count="270" type="stmt"/>
+        <line num="35" count="134" type="stmt"/>
+        <line num="36" count="134" type="stmt"/>
+        <line num="39" count="134" type="stmt"/>
+        <line num="44" count="134" type="stmt"/>
         <line num="45" count="1" type="stmt"/>
-        <line num="52" count="120" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="63" count="120" type="stmt"/>
-        <line num="64" count="40" type="cond" truecount="2" falsecount="0"/>
-        <line num="65" count="40" type="stmt"/>
-        <line num="66" count="88" type="stmt"/>
-        <line num="69" count="40" type="stmt"/>
-        <line num="73" count="40" type="stmt"/>
-        <line num="74" count="40" type="stmt"/>
-        <line num="76" count="40" type="stmt"/>
-        <line num="79" count="40" type="stmt"/>
-        <line num="90" count="120" type="stmt"/>
+        <line num="52" count="134" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="63" count="134" type="stmt"/>
+        <line num="64" count="45" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="45" type="stmt"/>
+        <line num="66" count="99" type="stmt"/>
+        <line num="69" count="45" type="stmt"/>
+        <line num="73" count="45" type="stmt"/>
+        <line num="74" count="45" type="stmt"/>
+        <line num="76" count="45" type="stmt"/>
+        <line num="79" count="45" type="stmt"/>
+        <line num="90" count="134" type="stmt"/>
         <line num="91" count="15" type="cond" truecount="2" falsecount="0"/>
         <line num="92" count="14" type="stmt"/>
         <line num="93" count="14" type="stmt"/>
         <line num="94" count="14" type="stmt"/>
         <line num="95" count="14" type="stmt"/>
         <line num="97" count="1" type="stmt"/>
-        <line num="108" count="120" type="stmt"/>
+        <line num="108" count="134" type="stmt"/>
         <line num="109" count="6" type="stmt"/>
         <line num="114" count="6" type="stmt"/>
         <line num="116" count="10" type="stmt"/>
-        <line num="124" count="6" type="stmt"/>
-        <line num="125" count="6" type="stmt"/>
-        <line num="134" count="120" type="stmt"/>
-        <line num="135" count="5" type="cond" truecount="2" falsecount="0"/>
-        <line num="136" count="4" type="stmt"/>
-        <line num="137" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="138" count="2" type="stmt"/>
-        <line num="140" count="4" type="stmt"/>
-        <line num="142" count="1" type="stmt"/>
-        <line num="150" count="120" type="stmt"/>
-        <line num="153" count="1" type="stmt"/>
-        <line num="154" count="1" type="stmt"/>
-        <line num="164" count="120" type="stmt"/>
-        <line num="167" count="1" type="stmt"/>
-        <line num="168" count="1" type="stmt"/>
-        <line num="169" count="1" type="stmt"/>
-        <line num="179" count="120" type="stmt"/>
-        <line num="183" count="6" type="stmt"/>
-        <line num="185" count="12" type="stmt"/>
-        <line num="186" count="12" type="stmt"/>
-        <line num="194" count="6" type="stmt"/>
-        <line num="195" count="6" type="stmt"/>
-        <line num="203" count="120" type="stmt"/>
-        <line num="207" count="134" type="cond" truecount="2" falsecount="0"/>
-        <line num="208" count="133" type="stmt"/>
-        <line num="209" count="133" type="cond" truecount="2" falsecount="0"/>
-        <line num="211" count="1" type="stmt"/>
-        <line num="221" count="120" type="stmt"/>
-        <line num="225" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="226" count="2" type="stmt"/>
-        <line num="227" count="2" type="stmt"/>
-        <line num="229" count="1" type="stmt"/>
-        <line num="233" count="120" type="stmt"/>
-        <line num="234" count="72" type="stmt"/>
-        <line num="236" count="140" type="cond" truecount="2" falsecount="0"/>
-        <line num="244" count="120" type="stmt"/>
-        <line num="245" count="60" type="stmt"/>
-        <line num="247" count="118" type="cond" truecount="2" falsecount="0"/>
-        <line num="255" count="120" type="stmt"/>
-        <line num="256" count="120" type="stmt"/>
-        <line num="258" count="120" type="stmt"/>
-        <line num="259" count="60" type="stmt"/>
-        <line num="260" count="60" type="stmt"/>
-        <line num="263" count="120" type="stmt"/>
+        <line num="121" count="6" type="stmt"/>
+        <line num="122" count="6" type="stmt"/>
+        <line num="131" count="134" type="stmt"/>
+        <line num="132" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="133" count="4" type="stmt"/>
+        <line num="134" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="135" count="2" type="stmt"/>
+        <line num="137" count="4" type="stmt"/>
+        <line num="139" count="1" type="stmt"/>
+        <line num="147" count="134" type="stmt"/>
+        <line num="150" count="1" type="stmt"/>
+        <line num="151" count="1" type="stmt"/>
+        <line num="161" count="134" type="stmt"/>
+        <line num="164" count="1" type="stmt"/>
+        <line num="165" count="1" type="stmt"/>
+        <line num="166" count="1" type="stmt"/>
+        <line num="176" count="134" type="stmt"/>
+        <line num="180" count="9" type="stmt"/>
+        <line num="182" count="17" type="stmt"/>
+        <line num="183" count="17" type="stmt"/>
+        <line num="188" count="9" type="stmt"/>
+        <line num="189" count="9" type="stmt"/>
+        <line num="190" count="9" type="stmt"/>
+        <line num="198" count="134" type="stmt"/>
+        <line num="202" count="158" type="cond" truecount="2" falsecount="0"/>
+        <line num="203" count="157" type="stmt"/>
+        <line num="204" count="157" type="cond" truecount="2" falsecount="0"/>
+        <line num="206" count="1" type="stmt"/>
+        <line num="216" count="134" type="stmt"/>
+        <line num="220" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="221" count="2" type="stmt"/>
+        <line num="222" count="2" type="stmt"/>
+        <line num="224" count="1" type="stmt"/>
+        <line num="228" count="134" type="stmt"/>
+        <line num="229" count="82" type="stmt"/>
+        <line num="231" count="159" type="cond" truecount="2" falsecount="0"/>
+        <line num="239" count="134" type="stmt"/>
+        <line num="240" count="67" type="stmt"/>
+        <line num="242" count="132" type="cond" truecount="2" falsecount="0"/>
+        <line num="250" count="134" type="stmt"/>
+        <line num="251" count="134" type="stmt"/>
+        <line num="253" count="134" type="stmt"/>
+        <line num="254" count="67" type="stmt"/>
+        <line num="255" count="67" type="stmt"/>
+        <line num="258" count="134" type="stmt"/>
       </file>
       <file name="validation.ts" path="/home/pb1337/source/repos/de-formed-validations/src/validations/validation.ts">
         <metrics statements="77" coveredstatements="77" conditionals="20" coveredconditionals="20" methods="25" coveredmethods="25"/>
