@@ -37,7 +37,7 @@ exports.useValidation = (validationSchema) => {
     const validate = (property, value, state) => {
         if (property in validationSchema) {
             const validations = runAllValidators(property, value, state);
-            const updated = { ...validationState, ...validations };
+            const updated = ramda_1.mergeRight(validationState, validations);
             setValidationState(updated);
             return utilities_1.isPropertyValid(property, validations);
         }
@@ -50,10 +50,7 @@ exports.useValidation = (validationSchema) => {
             utilities_1.prop('state'),
         ]);
         const state = ramda_1.reduce((prev, current) => {
-            return {
-                ...prev,
-                ...zip(current),
-            };
+            return ramda_1.mergeRight(prev, zip(current));
         }, {}, customValidations);
         setValidationState(state);
         return allValid(state);
@@ -62,7 +59,7 @@ exports.useValidation = (validationSchema) => {
         if (property in validationSchema) {
             const validations = runAllValidators(property, value, state);
             if (utilities_1.isPropertyValid(property, validations)) {
-                setValidationState({ ...validationState, ...validations });
+                setValidationState(ramda_1.mergeRight(validationState, validations));
             }
             return utilities_1.isPropertyValid(property, validations);
         }
@@ -80,12 +77,10 @@ exports.useValidation = (validationSchema) => {
     const validateAll = (state, props = Object.keys(validationSchema)) => {
         const newState = ramda_1.reduce((acc, property) => {
             const r = runAllValidators(property, utilities_1.prop(property, state), state);
-            return {
-                ...acc,
-                ...r,
-            };
+            return ramda_1.mergeRight(acc, r);
         }, {}, props);
-        setValidationState(newState);
+        const updated = ramda_1.mergeRight(validationState, newState);
+        setValidationState(updated);
         return allValid(newState);
     };
     const getError = (property, vState = validationState) => {
