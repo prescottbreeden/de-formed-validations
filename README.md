@@ -174,7 +174,7 @@ Check out the [documentation](https://github.com/prescottbreeden/de-formed-valid
 More [examples](https://github.com/prescottbreeden/de-formed-validations/wiki/Examples) and CodeSandboxes.
 
 ## Coverage
-![test coverage](https://github.com/prescottbreeden/de-formed-validations/blob/master/test-coverage.jpg?raw=true)
+![test coverage](https://github.com/prescottbreeden/de-formed-validations/blob/master/test-coverage.png?raw=true)
 
 ## License
 
