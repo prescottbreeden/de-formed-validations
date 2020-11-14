@@ -98,16 +98,16 @@ describe('useValidation tests', () => {
   });
 
   describe('getError', () => {
-    it('returns null by default', () => {
+    it('returns empty string by default', () => {
       const { result } = renderHook(() => useValidation(schema));
       const output = result.current.getError('name');
-      expect(output).toBe(null);
+      expect(output).toBe('');
     });
 
-    it('returns null if the property does not exist', () => {
+    it('returns empty string if the property does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
       const output = result.current.getError('balls' as keyof TestSchema);
-      expect(output).toBe(null);
+      expect(output).toBe('');
     });
 
     it('retrieves an error message', () => {
@@ -221,7 +221,7 @@ describe('useValidation tests', () => {
       expect(typeof output).toBe('boolean');
     });
 
-    it('returns null if key does not exist', () => {
+    it('returns true if key does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
       const name = 'balls' as keyof TestSchema;
       const value = 'bob';
@@ -230,7 +230,7 @@ describe('useValidation tests', () => {
       act(() => {
         output = result.current.validate(name, value, state);
       });
-      expect(output).toBe(null);
+      expect(output).toBe(true);
     });
 
     it('updates the validationState when validation fails', () => {
@@ -421,7 +421,7 @@ describe('useValidation tests', () => {
       expect(typeof output).toBe('boolean');
     });
 
-    it('returns undefined if key does not exist', () => {
+    it('returns true if key does not exist', () => {
       const { result } = renderHook(() => useValidation(schema));
       const name = 'balls' as keyof TestSchema;
       const value = 'bob';
@@ -430,7 +430,7 @@ describe('useValidation tests', () => {
       act(() => {
         output = result.current.validateIfTrue(name, value, state);
       });
-      expect(output).toBe(null);
+      expect(output).toBe(true);
     });
 
     it('updates the validationState when validation fails', () => {
