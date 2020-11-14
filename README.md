@@ -2,13 +2,13 @@
 
 De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React.  De-formed allows you 100% validation customization with almost zero learning curve and is built to scale. 
 
-## TL;DR
+## Why Use De-Formed?
 
-1. Works for Client or Server.
-2. Maintain separation between your validation logic and your presentation/server logic.
-3. Easily customize validation behavior in contextual and dynamic situations.
-4. Modular approach makes reusing and nested validations a snap.
-5. De-coupled validation functions makes unit testing validation requirements easy.
+1. Modular: reusing and nesting validations are a snap.
+2. Composable: simplifies scaling validations with large data types.
+3. De-Coupled: maintain separation between your validation logic and your presentation/server logic.
+4. Customizable: easily customize validation behavior in contextual and dynamic situations.
+5. Agnostic: works for Client or Server.
 
 ## Install
 ```
@@ -20,9 +20,6 @@ npm install de-formed-validations
 ## React Usage
 
 ### Step 1: Create a file to define your validations.
-
-To avoid unnecessary complexity, use the property names of the object you want to validate for the schema property names. Validation functions can receive a second parameter of state if needed.
-
 ```ts
 // PersonValidation.ts
 import { useValidation } from 'de-formed-validations';
@@ -60,7 +57,6 @@ export const PersonValidation = () => {
 ```
 
 ### Step 2: Plug into React Component
-
 ```tsx
 // PersonForm.component.tsx
 import React from 'react';
@@ -110,7 +106,6 @@ export const PersonForm = ({ person, onChange }) => {
 ## Node/Express or Vanilla JavaScript Usage
 
 ### Step 1: Create a file to define your validations.
-
 ```js
 // PersonValidation.js
 import { Validation } from 'de-formed-validations';
@@ -148,7 +143,6 @@ export const PersonValidation = () => {
 ```
 
 ### Step 2: Import as needed
-
 ```js
 // controller.js
 const PersonValidation = require('./PersonValidation');
@@ -161,12 +155,12 @@ app.use("/", (req, res) => {
     : res.json(v.validationState);
 });
 ```
-## Why use De-Formed?
 
-Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, lines of code should never be confused with readability. Ultimately our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable as requirements become more complex. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as updating the DOM with proper error messaging. Some of our clients have products which are 200k lines of code and 99% form data, and so our requirements for validations were that is must be: 
+## A Different Approach
+Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, lines of code should never be confused with readability or ease of scaling. Ultimately our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable as requirements become more complex. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as updating the DOM with proper error messaging. Some of our clients have products which are 200k loc of almost nothing but form data, and so our requirements for validations were that they must be: 
 
 * Composable
-* Easy enough to learn in a day
+* Simple enough to learn in a day
 * Powerful enough to handle any level of complexity
 * Easy to unit test
 
