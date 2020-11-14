@@ -156,7 +156,7 @@ app.use("/", (req, res) => {
 });
 ```
 
-## A different approach
+## A Different Approach
 Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, lines of code should never be confused with readability or ease of scaling. Ultimately our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable as requirements become more complex. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as updating the DOM with proper error messaging. Some of our clients have products which are 200k loc of almost nothing but form data, and so our requirements for validations were that they must be: 
 
 * Composable
