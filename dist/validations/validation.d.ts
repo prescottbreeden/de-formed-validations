@@ -1,4 +1,4 @@
-import { CustomValidation, ValidationSchema, ValidationState } from './types';
+import { ForceValidationState, GetAllErrors, GetError, GetFieldValid, ResetValidationState, Validate, ValidateAll, ValidateCustom, ValidateIfTrue, ValidateOnBlur, ValidateOnChange, ValidationSchema, ValidationState } from './types';
 export declare class Validation<S> {
     private _validationSchema;
     private _validationState;
@@ -7,17 +7,17 @@ export declare class Validation<S> {
     get validationState(): ValidationState;
     constructor(props: ValidationSchema<S>);
     private createValidationsState;
-    resetValidationState: () => void;
-    forceValidationState: (newValidationState: ValidationState) => void;
+    resetValidationState: ResetValidationState;
+    forceValidationState: ForceValidationState;
     private allValid;
     private runAllValidators;
-    getError: (property: keyof S) => string | null;
-    getAllErrors: (property: keyof S) => string[];
-    getFieldValid: (property: keyof S, vState?: ValidationState) => any;
-    validate: (property: keyof S, value: unknown, state?: S | undefined) => any;
-    validateAll: (state: S, props?: (keyof S)[]) => boolean;
-    validateCustom: (customValidations: CustomValidation[]) => boolean;
-    validateIfTrue: (property: keyof S, value: unknown, state?: S | undefined) => any;
-    validateOnBlur: (state: S) => (event: any) => void;
-    validateOnChange: (onChange: (event: any) => any, state: S) => (event: any) => any;
+    getError: GetError<S>;
+    getAllErrors: GetAllErrors<S>;
+    getFieldValid: GetFieldValid<S>;
+    validate: Validate<S>;
+    validateAll: ValidateAll<S>;
+    validateCustom: ValidateCustom;
+    validateIfTrue: ValidateIfTrue<S>;
+    validateOnBlur: ValidateOnBlur<S>;
+    validateOnChange: ValidateOnChange<S>;
 }

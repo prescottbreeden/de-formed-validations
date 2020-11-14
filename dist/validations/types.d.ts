@@ -1,5 +1,32 @@
 export declare type ValidationFunction<S> = (val: any, state: S) => boolean | ((val: any) => boolean);
-interface ValidationProps<S> {
+export declare type ForceValidationState = (validationState: ValidationState) => void;
+export declare type GetAllErrors<S> = (property: keyof S) => string[];
+export declare type GetError<S> = (property: keyof S) => string;
+export declare type GetFieldValid<S> = (property: keyof S) => boolean;
+export declare type ResetValidationState = () => void;
+export declare type Validate<S> = (property: keyof S, value: unknown, state?: S) => boolean;
+export declare type ValidateAll<S> = (state: S, keys?: (keyof S)[]) => boolean;
+export declare type ValidateCustom = (vals: CustomValidation[]) => boolean;
+export declare type ValidateIfTrue<S> = (property: keyof S, value: unknown, state?: S) => boolean;
+export declare type ValidateOnBlur<S> = (state: S) => (event: any) => any;
+export declare type ValidateOnChange<S> = (onChange: (event: any) => any, state: S) => (event: any) => any;
+export interface ValidationObject<S> {
+    forceValidationState: ForceValidationState;
+    getError: GetError<S>;
+    getAllErrors: GetAllErrors<S>;
+    getFieldValid: GetFieldValid<S>;
+    isValid: boolean;
+    resetValidationState: ResetValidationState;
+    validate: Validate<S>;
+    validateAll: ValidateAll<S>;
+    validateCustom: ValidateCustom;
+    validateIfTrue: ValidateIfTrue<S>;
+    validateOnBlur: ValidateOnBlur<S>;
+    validateOnChange: ValidateOnChange<S>;
+    validationErrors: string[];
+    validationState: ValidationState;
+}
+export interface ValidationProps<S> {
     errorMessage: string;
     validation: ValidationFunction<S>;
 }
@@ -12,25 +39,8 @@ export interface ValidationState {
         errors: string[];
     };
 }
-export interface ValidationObject<S> {
-    forceValidationState: (validationState: ValidationState) => void;
-    getError: (property: keyof S) => string | null;
-    getAllErrors: (property: keyof S) => string[];
-    getFieldValid: (property: keyof S) => boolean;
-    isValid: boolean;
-    resetValidationState: () => void;
-    validate: (property: keyof S, value: unknown, state?: S) => boolean | undefined;
-    validateAll: (state: S, keys?: (keyof S)[]) => boolean;
-    validateCustom: (vals: CustomValidation[]) => boolean;
-    validateIfTrue: (property: keyof S, value: unknown, state?: S) => boolean | undefined;
-    validateOnBlur: (state: S) => (event: any) => unknown;
-    validateOnChange: (onChange: (event: any) => unknown, state: S) => (event: any) => unknown;
-    validationErrors: string[];
-    validationState: ValidationState;
-}
 export interface CustomValidation {
     key: string;
     value: any;
     state?: any;
 }
-export {};

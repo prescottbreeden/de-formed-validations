@@ -28,14 +28,12 @@ exports.useValidation = (validationSchema) => {
         const allValidationsValid = utilities_1.all(bools);
         const errors = bools.reduce((acc, curr, idx) => {
             const errorOf = utilities_1.compose(utilities_1.prop('errorMessage'), utilities_1.prop(idx), utilities_1.prop(property));
-            return curr
-                ? acc
-                : [...acc, errorOf(validationSchema)];
+            return curr ? acc : [...acc, errorOf(validationSchema)];
         }, []);
         return {
             [property]: {
                 isValid: allValidationsValid,
-                errors: allValidationsValid ? [] : errors
+                errors: allValidationsValid ? [] : errors,
             },
         };
     };
@@ -46,7 +44,7 @@ exports.useValidation = (validationSchema) => {
             setValidationState(updated);
             return utilities_1.isPropertyValid(property, validations);
         }
-        return null;
+        return true;
     };
     const validateCustom = (customValidations) => {
         const zip = ramda_1.converge(runAllValidators, [
@@ -68,7 +66,7 @@ exports.useValidation = (validationSchema) => {
             }
             return utilities_1.isPropertyValid(property, validations);
         }
-        return null;
+        return true;
     };
     const validateOnBlur = (state) => (event) => {
         const { value, name } = event.target;
@@ -88,19 +86,19 @@ exports.useValidation = (validationSchema) => {
         setValidationState(updated);
         return allValid(newState);
     };
-    const getError = (property, vState = validationState) => {
-        if (property in validationSchema) {
-            const val = utilities_1.compose(ramda_1.head, utilities_1.prop('errors'), utilities_1.prop(property));
-            return val(vState) ? val(vState) : null;
-        }
-        return null;
-    };
     const getAllErrors = (property, vState = validationState) => {
         if (property in validationSchema) {
             const val = utilities_1.compose(utilities_1.prop('errors'), utilities_1.prop(property));
             return val(vState);
         }
         return [];
+    };
+    const getError = (property, vState = validationState) => {
+        if (property in validationSchema) {
+            const val = utilities_1.compose(ramda_1.head, utilities_1.prop('errors'), utilities_1.prop(property));
+            return val(vState) ? val(vState) : '';
+        }
+        return '';
     };
     const getFieldValid = (property, vState = validationState) => {
         if (property in validationSchema) {
