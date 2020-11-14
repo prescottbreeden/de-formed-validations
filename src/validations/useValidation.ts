@@ -26,7 +26,9 @@ import { map, reduce, converge, mergeRight, head } from 'ramda';
  * @param validationSchema an object containing all the properties you want to validate
  * @returns validationObject { forceValidationState, getError, getAllErrors, getFieldValid, isValid, resetValidationState, validate, validateAll, validateIfTrue, validateOnBlur, validateOnChange, validationState }
  */
-export const useValidation = <S>(validationSchema: ValidationSchema<S>): ValidationObject<S> => {
+export const useValidation = <S>(
+  validationSchema: ValidationSchema<S>,
+): ValidationObject<S> => {
   // -- Build Validation State Object -------------------------------------
   const createValidationsState = (schema: ValidationSchema<S>) => {
     return reduce(
@@ -56,11 +58,12 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
     compose(setValidationState, createValidationsState)(validationSchema);
 
   /**
-   *  Overrides the existing validation state with another. WARNING: this feature
-   *  is experimental and may be removed in future versions.
+   *  Overrides the existing validation state with another.
    *  @param newValidationState ValidationState
    */
-  const forceValidationState: ForceValidationState = (newValidationState: ValidationState): void => {
+  const forceValidationState: ForceValidationState = (
+    newValidationState: ValidationState,
+  ): void => {
     setValidationState(newValidationState);
   };
 
@@ -71,8 +74,12 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
    * @param value any the value to be tested for validation
    * @return true/false validation
    */
-  const runAllValidators = (property: keyof S, value: any, state?: S): ValidationState => {
-    const localState = state ? state : {} as S;
+  const runAllValidators = (
+    property: keyof S,
+    value: any,
+    state?: S,
+  ): ValidationState => {
+    const localState = state ? state : ({} as S);
     const runValidator = compose(
       (func: ValidationFunction<S>) => func(value, localState),
       prop('validation'),
@@ -83,20 +90,13 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
     );
     const allValidationsValid: boolean = all(bools);
     const errors = bools.reduce((acc: string[], curr: boolean, idx: number) => {
-      const errorOf = compose(
-        prop('errorMessage'),
-        prop(idx),
-        prop(property),
-      );
-      return curr
-        ? acc
-        : [...acc, errorOf(validationSchema) ];
-
+      const errorOf = compose(prop('errorMessage'), prop(idx), prop(property));
+      return curr ? acc : [...acc, errorOf(validationSchema)];
     }, []);
     return {
       [property]: {
         isValid: allValidationsValid,
-        errors: allValidationsValid ? [] : errors
+        errors: allValidationsValid ? [] : errors,
       },
     };
   };
@@ -107,7 +107,11 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
    * @param value any the value to be tested for validation
    * @return boolean
    */
-  const validate: Validate<S> = (property: keyof S, value: unknown, state?: S): boolean => {
+  const validate: Validate<S> = (
+    property: keyof S,
+    value: unknown,
+    state?: S,
+  ): boolean => {
     if (property in validationSchema) {
       const validations = runAllValidators(property, value, state);
       const updated = mergeRight(validationState, validations);
@@ -122,10 +126,12 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
    * if you need to run validations on data where the validation props are
    * unable to follow the names of the properties of an object. Will return a
    * boolean and update validation state.
-   * @param props string[] property names to check (optional)
+   * @param customValidations CustomValidation[]
    * @return boolean
    */
-  const validateCustom: ValidateCustom = (customValidations: CustomValidation[]): boolean => {
+  const validateCustom: ValidateCustom = (
+    customValidations: CustomValidation[],
+  ): boolean => {
     const zip = converge(runAllValidators, [
       prop('key'),
       prop('value'),
@@ -148,7 +154,11 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
    * @param value any the value to be tested for validation
    * @return boolean
    */
-  const validateIfTrue: ValidateIfTrue<S> = (property: keyof S, value: unknown, state?: S): boolean => {
+  const validateIfTrue: ValidateIfTrue<S> = (
+    property: keyof S,
+    value: unknown,
+    state?: S,
+  ): boolean => {
     if (property in validationSchema) {
       const validations = runAllValidators(property, value, state);
       if (isPropertyValid(property, validations)) {
@@ -163,7 +173,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
    * Create a new onBlur function that calls validate on a property matching the
    * name of the event whenever a blur event happens.
    * @param state the data controlling the form
-   * @return function
+   * @return function :: (event: any) => any
    */
   const validateOnBlur: ValidateOnBlur<S> = (state: S) => (
     event: ChangeEvent<HTMLInputElement>,
@@ -177,11 +187,12 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
    * matching the name of the event whenever a change event happens.
    * @param onChange function to handle onChange events
    * @param state the data controlling the form
-   * @return function
+   * @return function :: (event: any) => any
    */
-  const validateOnChange: ValidateOnChange<S> = (onChange: (event: any) => any, state: S) => (
-    event: any,
-  ): unknown => {
+  const validateOnChange: ValidateOnChange<S> = (
+    onChange: (event: any) => any,
+    state: S,
+  ) => (event: any): unknown => {
     const { value, name } = event.target;
     validateIfTrue(name as keyof S, value, state);
     return onChange(event);
@@ -279,7 +290,7 @@ export const useValidation = <S>(validationSchema: ValidationSchema<S>): Validat
         return getError(curr) ? [...acc, getError(curr) as string] : acc;
       },
       [],
-      Object.keys(state) as (keyof S)[]
+      Object.keys(state) as (keyof S)[],
     );
   };
 

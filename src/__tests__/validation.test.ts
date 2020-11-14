@@ -5,7 +5,7 @@ type TestSchema = {
   name: string;
   age: number;
   dingo?: boolean;
-}
+};
 
 const schema: ValidationSchema<TestSchema> = {
   name: [
@@ -99,16 +99,16 @@ describe('useValidation tests', () => {
   });
 
   describe('getError', () => {
-    it('returns null by default', () => {
+    it('returns empty string by default', () => {
       const v = new Validation(schema);
       const output = v.getError('name');
-      expect(output).toBe(null);
+      expect(output).toBe('');
     });
 
-    it('returns null if the property does not exist', () => {
+    it('returns empty string if the property does not exist', () => {
       const v = new Validation(schema);
       const output = v.getError('balls' as keyof TestSchema);
-      expect(output).toBe(null);
+      expect(output).toBe('');
     });
 
     it('retrieves an error message', () => {
@@ -177,7 +177,7 @@ describe('useValidation tests', () => {
     });
 
     it('changes to false after a validation fails', () => {
-      let output: boolean | null;
+      let output: boolean;
       const v = new Validation(schema);
       const state = defaultState;
       output = v.validate('name', 'bob', state);
@@ -198,7 +198,7 @@ describe('useValidation tests', () => {
   describe('validate', () => {
     it('returns a boolean if key exists', () => {
       const v = new Validation(schema);
-      let output: boolean | null;
+      let output: boolean;
       const name = 'name';
       const value = 'bob';
       const state = defaultState;
@@ -206,14 +206,14 @@ describe('useValidation tests', () => {
       expect(typeof output).toBe('boolean');
     });
 
-    it('returns null if key does not exist', () => {
-      let output: boolean | null;
+    it('returns true if key does not exist', () => {
+      let output: boolean;
       const v = new Validation(schema);
       const name = 'balls' as keyof TestSchema;
       const value = 'bob';
       const state = defaultState;
       output = v.validate(name, value, state);
-      expect(typeof output).toBe('object');
+      expect(output).toBe(true);
     });
 
     it('updates the validationState when validation fails', () => {
@@ -237,21 +237,21 @@ describe('useValidation tests', () => {
   describe('validateAll', () => {
     it('returns a boolean', () => {
       const v = new Validation(schema);
-      let output: boolean | null;
+      let output: boolean;
       output = v.validateAll(defaultState);
       expect(typeof output).toBe('boolean');
     });
 
     it('returns true if validations pass', () => {
       const v = new Validation(schema);
-      let output: boolean | null;
+      let output: boolean;
       output = v.validateAll(defaultState);
       expect(output).toBe(true);
     });
 
     it('returns false if any validation fails', () => {
       const v = new Validation(schema);
-      let output: boolean | null;
+      let output: boolean;
       output = v.validateAll(failingState);
       expect(output).toBe(false);
     });
@@ -285,7 +285,7 @@ describe('useValidation tests', () => {
     };
     it('returns a boolean', () => {
       const v = new Validation(weirdSchema);
-      let output: boolean | null;
+      let output: boolean;
       const validNames = ['bob', 'bob', 'bob'];
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: validNames },
@@ -296,7 +296,7 @@ describe('useValidation tests', () => {
 
     it('returns true if validations pass', () => {
       const v = new Validation(weirdSchema);
-      let output: boolean | null;
+      let output: boolean;
       const validNames = ['bob', 'bob', 'bob'];
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: validNames },
@@ -308,7 +308,7 @@ describe('useValidation tests', () => {
     it('returns false if validations fail', () => {
       const v = new Validation(weirdSchema);
       const invalidNames = ['jack', 'bob', 'bob'];
-      let output: boolean | null;
+      let output: boolean;
       output = v.validateCustom([
         { key: 'namesAreAllBob', value: invalidNames },
         { key: 'namesAreAllDingo', value: invalidNames, state: defaultState },
@@ -339,7 +339,7 @@ describe('useValidation tests', () => {
   describe('validateIfTrue', () => {
     it('returns a boolean if key exists', () => {
       const v = new Validation(schema);
-      let output: boolean | null;
+      let output: boolean;
       const name = 'name';
       const value = 'bob';
       const state = defaultState;
@@ -347,14 +347,14 @@ describe('useValidation tests', () => {
       expect(typeof output).toBe('boolean');
     });
 
-    it('returns null if key does not exist', () => {
+    it('returns true if key does not exist', () => {
       const v = new Validation(schema);
       const name = 'balls' as keyof TestSchema;
       const value = 'bob';
       const state = defaultState;
-      let output: boolean | null;
+      let output: boolean;
       output = v.validateIfTrue(name, value, state);
-      expect(typeof output).toBe('object');
+      expect(output).toBe(true);
     });
 
     it('does not update the validationState when validation fails', () => {

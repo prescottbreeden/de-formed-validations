@@ -7,7 +7,7 @@ type TestSchema = {
   name: string;
   age: number;
   dingo?: boolean;
-}
+};
 
 const schema: ValidationSchema<TestSchema> = {
   name: [
@@ -568,8 +568,10 @@ describe('useValidation tests', () => {
       });
       act(() => {
         v2.current.forceValidationState(v1.current.validationState);
-      })
-      expect(v1.current.validationState).toStrictEqual(v2.current.validationState);
+      });
+      expect(v1.current.validationState).toStrictEqual(
+        v2.current.validationState,
+      );
     });
   });
 });

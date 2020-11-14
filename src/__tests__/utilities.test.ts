@@ -1,4 +1,4 @@
-import {prop} from "../utilities";
+import { prop } from '../utilities';
 
 describe('prop', () => {
   it('returns undefined if object is null or undefined', () => {
