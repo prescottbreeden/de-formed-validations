@@ -1,6 +1,6 @@
 # De-Formed Validations
 
-De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React.  De-formed allows you 100% validation customization with almost zero learning curve and is built to scale. 
+De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React. With limitless scaling and 100% validation customization with almost zero learning curve, de-formed maintains its own internal state via simple function calls so that you can design your architecture the way you want to. Initially designed to manage client-side validations, it became so popular with our team we added the ability to run de-formed on the server as well. 
 
 ## Why Use De-Formed?
 
