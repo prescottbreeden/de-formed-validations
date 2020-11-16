@@ -1,14 +1,13 @@
 # De-Formed Validations
 
-De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React. With limitless scaling and only a handful of properties to learn, de-formed maintains its own internal state with simple function calls so that you can design your architecture the way you want to. Initially designed to manage client-side validations, it was so friendly to use and effective in our larger application requirements that we added the ability to run de-formed on the server as well. 
+De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React. With only a handful of properties to learn, de-formed maintains its own internal state with simple function calls so that you can design your architecture the way you want to.
 
 ## Why Use De-Formed?
 
-1. Modular: reusing and nesting validations are a snap.
-2. Composable: simplifies scaling validations with large data types.
-3. De-Coupled: maintain separation between your validation logic and your presentation/server logic.
-4. Customizable: easily customize validation behavior in contextual and dynamic situations.
-5. Agnostic: works for Client or Server.
+1. Modular and Composable
+2. Easier to learn than the effect of pissing into the wind
+3. Powerful enough to handle any level of complexity
+4. Works for Client or Server.
 
 ## Install
 ```
@@ -149,21 +148,22 @@ const PersonValidation = require('./PersonValidation');
 
 app.use("/", (req, res) => {
   const v = PersonValidation();
-  v.validateAll(req.body);
-  return v.isValid
+  return v.validateAll(req.body)
     ? res.json('success')
     : res.json(v.validationState);
 });
 ```
 
 ## A Different Approach
-Some of the most popular schema validation libraries available are bogged down by a numerous flags, properties, and identifiers; and while for really simple schemas they are great, lines of code should never be confused with readability or ease of scaling. Our team discovered this the first time we had to scale a product that ended up with over 200k loc of pure form data, leading us to appreciate that you don't always see the problems of a comfy minivan until you try to take it off-roading at 100mph. Ultimately our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable as requirements become more complex. Furthermore, as our requirements became more complex, our distaste for opiononated APIs grew more sour. Almost any beginner can write a function that evaluates whether a string is X characters long, so why do we need special properties to define that functionality? What we need is a way to organize, store, and re-use a series of functions that define the requirements. At the end of the day, most validation packages are simply written backwards because validations are simply easier when you define the rules yourself rather than looking up in documentation what pre-written rules satisfy the validation requirements your client just gave you. Another issue for us was that many of these libraries are not easily composed with other aspects of managing data validations such as convenient two-way data binding between the validations and the DOM so that error messaging is handled automatically. Boiled down, our requirements for a validations package was that it must be: 
+Some of the most popular schema validation libraries available are bogged down by numerous flags and properties, and/or are tightly coupled with form libraries; and while for really simple schemas they are great, lines of code should never be confused with readability or ease of scaling. Our team discovered this the first time we had to scale a product that ended up with over 200k loc of highly-nested form data, leading us to appreciate that you don't always see the problems of a comfy minivan until you try to take it off-roading at 100mph. 
 
-* Modular and Composable
-* Easier to learn than the effect of pissing into the wind
-* Powerful enough to handle any level of complexity
+Ultimately our team decided it did not make sense to build out our larger projects using libraries that favored syntax which becomes less readable as requirements become more complex. Furthermore, as requirements become more complex, opinionated APIs just slow you down. Almost any beginner can write a function that evaluates whether a string is X characters long, so why do we need special properties to define that functionality? What we need is a way to organize, store, and re-use a series of functions that define the requirements. At the end of the day, most validation packages are written with the least useful properties becoming hurdles. Validations are easier to write and maintain when you can define the rules yourself rather than looking up the documentation on which pre-written rule satisfies the validation requirement your client just gave you. 
 
-De-Formed takes a simple schema with two properties for each validation requirement: 1) the error message, 2) the function to execute. These properties are held in an array allowing you to define as many as you wish.  Once the schema is designed, just instanstiate a new validation object wherever you need to validate data. While there are only a handful of functions and properties available on this object, you will find that most validation requirements will be easy to meet with just "validateOnChange", "validateOnBlur", "validateAll", and, "getError"; however, should you have really out-of-the-box requirements, you can use "validateCustom" to execute validations that involve dependencies on multiple unrelated schemas. Importantly, all validations are de-coupled from your form and controller architecture allowing them to be executed, reused, and composed together in any context necessary. Just define as many functions as you want in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
+Another issue for us was that many validation libraries are not easily composed with other aspects of managing validations such as convenient two-way data binding between the validation state and the DOM so that error messaging is handled automatically with minimal effort. 
+
+De-Formed takes a simple schema with two properties for each validation requirement: 1) the error message, 2) the function to execute. These properties are held in an array allowing you to define as many as you wish.  Once the schema is designed, just instantiate a new validation object wherever you need to validate data. While there are only a handful of functions and properties available on this object, you will find that most validation requirements will be easy to meet with just "validateOnChange", "validateOnBlur", "validateAll", and, "getError"; however, should you have really out-of-the-box requirements, you can use "validateCustom" to execute validations that involve dependencies on multiple unrelated schemas. 
+
+Importantly, all validations are de-coupled from your form and controller architecture allowing them to be executed, reused, and composed together in any context necessary. Just define as many functions as you want in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
 
 ## Documentation
 
