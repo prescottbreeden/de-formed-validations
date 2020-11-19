@@ -301,6 +301,23 @@ describe('useValidation tests', () => {
       });
       expect(result.current.getError('age')).toBe('Must be 18');
     });
+
+    it('handles missing properties', () => {
+      const wonkySchema = {
+        ...schema,
+        'canSave' : [
+          {
+            errorMessage: 'you cannot save',
+            validation: (val: string, state: any) => !!state.name,
+          }
+        ],
+      }
+      const { result } = renderHook(() => useValidation(wonkySchema));
+      act(() => {
+        result.current.validateAll(failingState);
+      });
+      expect(result.current.getError('canSave')).toBe('');
+    });
   });
 
   describe('validateCustom', () => {
