@@ -5,7 +5,7 @@ De-Formed Validations is a robust and unopinionated API to manage form and data 
 ## Why Use De-Formed?
 
 1. Modular and Composable
-2. Easier to learn than the effect of pissing into the wind
+2. Unopinionated and Unassuming
 3. Powerful enough to handle any level of complexity
 4. Works for Client or Server.
 
