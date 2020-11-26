@@ -6,7 +6,7 @@ De-Formed Validations is a robust and unopinionated API to manage form and data 
 
 1. Modular and Composable
 2. Unopinionated and Unassuming
-3. Powerful enough to handle any level of complexity
+3. Easy to use and test.
 4. Works for Client or Server.
 
 ## Install
