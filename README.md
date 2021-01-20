@@ -5,8 +5,8 @@ De-Formed Validations is a robust and unopinionated API to manage form and data 
 ## Why Use De-Formed?
 
 1. Modular and Composable
-2. Easier to learn than the effect of pissing into the wind
-3. Powerful enough to handle any level of complexity
+2. Unopinionated
+3. Easy to use and test.
 4. Works for Client or Server.
 
 ## Install
@@ -153,9 +153,11 @@ app.use("/", (req, res) => {
     : res.json(v.validationState);
 });
 ```
+### Double-Trouble
+If you are using a Node server, you can send the validationState back to the Client with the response and the UI can then call ```forceValidationState``` to automatically render any server validation errors back to the user.
 
 ## A Different Approach
-De-formed generates validations by calling an array of functions that define the exact requirements for a given property. There are no special properties to define (e.g. type, length, max, min, etc). We avoided this because it creates assumptions about how validations are supposed to generate error messages and our goal is make validations that are as unopinionated as possible; therefore, each function returns either true or false, and if it fails, it generates the error message associated with that function.
+De-formed generates validations by calling an array of functions that define the exact requirements for a given property. There are no special properties to define (e.g. type, length, max, min, etc). We avoided this because it requires de-formed to make assumptions about the data it is recieving which can be a common runtime error. It also forces redundant error messages because if there is only one error message a user will be shown, then just write one function that handles the validation and you're done. Ultimately, you know your data and de-formed does not, and our goal is make validations that are as unopinionated as possible; therefore, each function returns either true or false, and if it fails, it generates the error message associated with that function. In this way, de-formed allows you to write validations from the perspective of what error messages are users supposed to see and then write a function that does that thing.
 
 Importantly, all validations are de-coupled from your form and controller architecture allowing them to be executed, reused, and composed together in any context necessary. Just define as many functions as you want in your schema and then execute them on whichever events you choose (client-side or server-side). This provides you with a function-based, modular approach to design validation patterns that meet your requirements without the hassle of managing the validation data yourself.
 
