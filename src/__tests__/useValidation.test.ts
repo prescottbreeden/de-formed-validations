@@ -13,23 +13,23 @@ const schema: ValidationSchema<TestSchema> = {
   name: [
     {
       errorMessage: 'Name is required.',
-      validation: (val: string) => val.length > 0,
+      validation: (val: any) => val.length > 0,
     },
     {
       errorMessage: 'Cannot be bob.',
-      validation: (val: string) => val !== 'bob',
+      validation: (val: any) => val !== 'bob',
     },
     {
       errorMessage: 'Must be dingo.',
-      validation: (val: string, state: any) => {
-        return state.dingo ? val === 'dingo' : true;
+      validation: (val: any) => {
+        return val.dingo ? val.name === 'dingo' : true;
       },
     },
   ],
   age: [
     {
       errorMessage: 'Must be 18',
-      validation: (val: number) => val >= 18,
+      validation: (val: any) => val >= 18,
     },
   ],
 };

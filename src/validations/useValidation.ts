@@ -76,12 +76,10 @@ export const useValidation = <S>(
    */
   const runAllValidators = (
     property: keyof S,
-    value: any,
-    state?: S,
+    data: S | Partial<S>,
   ): ValidationState => {
-    const localState = state ? state : ({} as S);
     const runValidator = compose(
-      (func: ValidationFunction<S>) => func(value, localState),
+      (func: ValidationFunction<S>) => func(prop(property, data)),
       prop('validation'),
     );
     const bools: boolean[] = map(
@@ -109,11 +107,10 @@ export const useValidation = <S>(
    */
   const validate: Validate<S> = (
     property: keyof S,
-    value: unknown,
-    state?: S,
+    state: S | Partial<S>,
   ): boolean => {
     if (property in validationSchema) {
-      const validations = runAllValidators(property, value, state);
+      const validations = runAllValidators(property, state);
       const updated = mergeRight(validationState, validations);
       setValidationState(updated);
       return isPropertyValid(property, validations);
@@ -156,11 +153,10 @@ export const useValidation = <S>(
    */
   const validateIfTrue: ValidateIfTrue<S> = (
     property: keyof S,
-    value: unknown,
-    state?: S,
+    data: S | Partial<S>,
   ): boolean => {
     if (property in validationSchema) {
-      const validations = runAllValidators(property, value, state);
+      const validations = runAllValidators(property, data);
       if (isPropertyValid(property, validations)) {
         setValidationState(mergeRight(validationState, validations));
       }
@@ -179,7 +175,7 @@ export const useValidation = <S>(
     event: ChangeEvent<HTMLInputElement>,
   ): void => {
     const { value, name } = event.target;
-    validate(name as keyof S, value, state);
+    validate(name as keyof S, { ...state, [name]: value });
   };
 
   /**
@@ -194,7 +190,15 @@ export const useValidation = <S>(
     state: S,
   ) => (event: any): unknown => {
     const { value, name } = event.target;
-    validateIfTrue(name as keyof S, value, state);
+    validateIfTrue(
+      name as keyof S,
+      {
+        ...state,
+        [name]: value
+      }
+    );
+
+
     return onChange(event);
   };
 
@@ -211,7 +215,7 @@ export const useValidation = <S>(
   ): boolean => {
     const newState = reduce(
       (acc: ValidationState, property: keyof S) => {
-        const r = runAllValidators(property, prop(property, state), state);
+        const r = runAllValidators(property, state);
         return mergeRight(acc, r);
       },
       {},

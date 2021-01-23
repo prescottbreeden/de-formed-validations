@@ -1,54 +1,49 @@
-export type ValidationFunction<S> = (
-  val: any,
-  state: S,
-) => boolean | ((val: any) => boolean);
-export type ForceValidationState = (validationState: ValidationState) => void;
-export type GetAllErrors<S> = (property: keyof S) => string[];
-export type GetError<S> = (property: keyof S) => string;
-export type GetFieldValid<S> = (property: keyof S) => boolean;
+export type ValidationFunction<T> = (data: T | Partial<T>) => boolean;
+export type ForceValidationState = (validationdata: ValidationState) => void;
+export type GetAllErrors<T> = (property: keyof T) => string[];
+export type GetError<T> = (property: keyof T) => string;
+export type GetFieldValid<T> = (property: keyof T) => boolean;
 export type ResetValidationState = () => void;
-export type Validate<S> = (
-  property: keyof S,
-  value: unknown,
-  state?: S,
+export type Validate<T> = (
+  property: keyof T,
+  data: T,
 ) => boolean;
-export type ValidateAll<S> = (state: S, keys?: (keyof S)[]) => boolean;
+export type ValidateAll<T> = (data: T) => boolean;
 export type ValidateCustom = (vals: CustomValidation[]) => boolean;
-export type ValidateIfTrue<S> = (
-  property: keyof S,
-  value: unknown,
-  state?: S,
+export type ValidateIfTrue<T> = (
+  property: keyof T,
+  data: T | Partial<T>,
 ) => boolean;
-export type ValidateOnBlur<S> = (state: S) => (event: any) => any;
-export type ValidateOnChange<S> = (
+export type ValidateOnBlur<T> = (data: T) => (event: any) => any;
+export type ValidateOnChange<T> = (
   onChange: (event: any) => any,
-  state: S,
+  data: T,
 ) => (event: any) => any;
 
-export interface ValidationObject<S> {
+export interface ValidationObject<T> {
   forceValidationState: ForceValidationState;
-  getError: GetError<S>;
-  getAllErrors: GetAllErrors<S>;
-  getFieldValid: GetFieldValid<S>;
+  getError: GetError<T>;
+  getAllErrors: GetAllErrors<T>;
+  getFieldValid: GetFieldValid<T>;
   isValid: boolean;
   resetValidationState: ResetValidationState;
-  validate: Validate<S>;
-  validateAll: ValidateAll<S>;
+  validate: Validate<T>;
+  validateAll: ValidateAll<T>;
   validateCustom: ValidateCustom;
-  validateIfTrue: ValidateIfTrue<S>;
-  validateOnBlur: ValidateOnBlur<S>;
-  validateOnChange: ValidateOnChange<S>;
+  validateIfTrue: ValidateIfTrue<T>;
+  validateOnBlur: ValidateOnBlur<T>;
+  validateOnChange: ValidateOnChange<T>;
   validationErrors: string[];
   validationState: ValidationState;
 }
 
-export interface ValidationProps<S> {
+export interface ValidationProps<T> {
   errorMessage: string;
-  validation: ValidationFunction<S>;
+  validation: ValidationFunction<T>;
 }
 
-export interface ValidationSchema<S> {
-  [key: string]: ValidationProps<S>[];
+export interface ValidationSchema<T> {
+  [key: string]: ValidationProps<T>[];
 }
 
 export interface ValidationState {
@@ -60,6 +55,5 @@ export interface ValidationState {
 
 export interface CustomValidation {
   key: string;
-  value: any;
-  state?: any;
+  data: any;
 }

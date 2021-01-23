@@ -24,7 +24,9 @@
   "dependencies": {
     "@types/ramda": "^0.27.30",
     "@types/react": "^16.9.52",
-    "ramda": "^0.27.1"
+    "fp-tools": "^1.0.4",
+    "ramda": "^0.27.1",
+    "react": "^17.0.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
