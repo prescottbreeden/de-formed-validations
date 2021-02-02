@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   ValidationSchema,
   ValidationState,
@@ -10,12 +10,11 @@ import {
   Validate,
   ValidateCustom,
   ValidateIfTrue,
-  ValidateOnBlur,
-  ValidateOnChange,
   GetFieldValid,
   GetAllErrors,
   GetError,
   ValidateAll,
+  List,
 } from './types';
 import { compose, prop, all, isPropertyValid } from '../utilities';
 import { map, reduce, converge, mergeRight, head } from 'ramda';
@@ -75,28 +74,30 @@ export const useValidation = <S>(
    * @return true/false validation
    */
   const runAllValidators = (
-    property: keyof S,
+    name: keyof S,
     value: any,
-    state?: S,
+    state: S,
   ): ValidationState => {
-    const localState = state ? state : ({} as S);
     const runValidator = compose(
-      (func: ValidationFunction<S>) => func(value, localState),
+      (func: ValidationFunction<S>) => func({...state, [name]: value}),
       prop('validation'),
     );
     const bools: boolean[] = map(
       runValidator,
-      prop(property, validationSchema),
+      prop(name, validationSchema),
     );
-    const allValidationsValid: boolean = all(bools);
     const errors = bools.reduce((acc: string[], curr: boolean, idx: number) => {
-      const errorOf = compose(prop('errorMessage'), prop(idx), prop(property));
+      const errorOf = compose(
+        prop('errorMessage'),
+        prop(idx),
+        prop(name)
+      );
       return curr ? acc : [...acc, errorOf(validationSchema)];
     }, []);
     return {
-      [property]: {
-        isValid: allValidationsValid,
-        errors: allValidationsValid ? [] : errors,
+      [name]: {
+        isValid: all(bools),
+        errors: all(bools) ? [] : errors,
       },
     };
   };
@@ -107,16 +108,13 @@ export const useValidation = <S>(
    * @param value any the value to be tested for validation
    * @return boolean
    */
-  const validate: Validate<S> = (
-    property: keyof S,
-    value: unknown,
-    state?: S,
-  ): boolean => {
-    if (property in validationSchema) {
-      const validations = runAllValidators(property, value, state);
+  const validate: Validate<S> = (state: S) => (event: any): boolean => {
+    const { target: { name, value } } = event;
+    if (name in validationSchema) {
+      const validations = runAllValidators(name, value, state);
       const updated = mergeRight(validationState, validations);
-      setValidationState(updated);
-      return isPropertyValid(property, validations);
+      setValidationState(updated); // TODO: refac
+      return isPropertyValid(name as keyof S, validations);
     }
     return true;
   };
@@ -154,48 +152,16 @@ export const useValidation = <S>(
    * @param value any the value to be tested for validation
    * @return boolean
    */
-  const validateIfTrue: ValidateIfTrue<S> = (
-    property: keyof S,
-    value: unknown,
-    state?: S,
-  ): boolean => {
-    if (property in validationSchema) {
-      const validations = runAllValidators(property, value, state);
-      if (isPropertyValid(property, validations)) {
+  const validateIfTrue: ValidateIfTrue<S> = (state: S) => (event: any): boolean => {
+    const { target: { name, value } } = event;
+    if (name in validationSchema) {
+      const validations = runAllValidators(name, value, state);
+      if (isPropertyValid(name as keyof S, validations)) {
         setValidationState(mergeRight(validationState, validations));
       }
-      return isPropertyValid(property, validations);
+      return isPropertyValid(name as keyof S, validations);
     }
     return true;
-  };
-
-  /**
-   * Create a new onBlur function that calls validate on a property matching the
-   * name of the event whenever a blur event happens.
-   * @param state the data controlling the form
-   * @return function :: (event: any) => any
-   */
-  const validateOnBlur: ValidateOnBlur<S> = (state: S) => (
-    event: ChangeEvent<HTMLInputElement>,
-  ): void => {
-    const { value, name } = event.target;
-    validate(name as keyof S, value, state);
-  };
-
-  /**
-   * Create a new onChange function that calls validateIfTrue on a property
-   * matching the name of the event whenever a change event happens.
-   * @param onChange function to handle onChange events
-   * @param state the data controlling the form
-   * @return function :: (event: any) => any
-   */
-  const validateOnChange: ValidateOnChange<S> = (
-    onChange: (event: any) => any,
-    state: S,
-  ) => (event: any): unknown => {
-    const { value, name } = event.target;
-    validateIfTrue(name as keyof S, value, state);
-    return onChange(event);
   };
 
   /**
@@ -207,7 +173,7 @@ export const useValidation = <S>(
    */
   const validateAll: ValidateAll<S> = (
     state: S,
-    props: (keyof S)[] = Object.keys(validationSchema) as (keyof S)[],
+    props?: List<keyof S>,
   ): boolean => {
     const newState = reduce(
       (acc: ValidationState, property: keyof S) => {
@@ -215,10 +181,9 @@ export const useValidation = <S>(
         return mergeRight(acc, r);
       },
       {},
-      props,
+      props ?? Object.keys(validationSchema) as any,
     );
-    const updated = mergeRight(validationState, newState);
-    setValidationState(updated);
+    setValidationState(newState);
     return allValid(newState);
   };
 
@@ -314,8 +279,6 @@ export const useValidation = <S>(
     validateAll,
     validateCustom,
     validateIfTrue,
-    validateOnBlur,
-    validateOnChange,
     validationErrors,
     validationState,
   };

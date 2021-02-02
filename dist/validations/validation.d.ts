@@ -1,4 +1,4 @@
-import { ForceValidationState, GetAllErrors, GetError, GetFieldValid, ResetValidationState, Validate, ValidateAll, ValidateCustom, ValidateIfTrue, ValidateOnBlur, ValidateOnChange, ValidationSchema, ValidationState } from './types';
+import { ForceValidationState, GetAllErrors, GetError, GetFieldValid, ResetValidationState, Validate, ValidateAll, ValidateCustom, ValidateIfTrue, ValidationSchema, ValidationState } from './types';
 export declare class Validation<S> {
     private _validationSchema;
     private _validationState;
@@ -18,6 +18,4 @@ export declare class Validation<S> {
     validateAll: ValidateAll<S>;
     validateCustom: ValidateCustom;
     validateIfTrue: ValidateIfTrue<S>;
-    validateOnBlur: ValidateOnBlur<S>;
-    validateOnChange: ValidateOnChange<S>;
 }

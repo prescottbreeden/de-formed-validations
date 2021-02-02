@@ -1,13 +1,14 @@
-export declare type ValidationFunction<S> = (val: any, state: S) => boolean | ((val: any) => boolean);
+export declare type List<A = any> = ReadonlyArray<A>;
+export declare type ValidationFunction<S> = (state: S) => boolean;
 export declare type ForceValidationState = (validationState: ValidationState) => void;
-export declare type GetAllErrors<S> = (property: keyof S) => string[];
+export declare type GetAllErrors<S> = (property: keyof S) => List<string>;
 export declare type GetError<S> = (property: keyof S) => string;
 export declare type GetFieldValid<S> = (property: keyof S) => boolean;
 export declare type ResetValidationState = () => void;
-export declare type Validate<S> = (property: keyof S, value: unknown, state?: S) => boolean;
-export declare type ValidateAll<S> = (state: S, keys?: (keyof S)[]) => boolean;
+export declare type Validate<S> = (state: S) => (event: any) => boolean;
+export declare type ValidateAll<S> = (state: S, keys?: List<keyof S>) => boolean;
 export declare type ValidateCustom = (vals: CustomValidation[]) => boolean;
-export declare type ValidateIfTrue<S> = (property: keyof S, value: unknown, state?: S) => boolean;
+export declare type ValidateIfTrue<S> = (state: S) => (event: any) => boolean;
 export declare type ValidateOnBlur<S> = (state: S) => (event: any) => any;
 export declare type ValidateOnChange<S> = (onChange: (event: any) => any, state: S) => (event: any) => any;
 export interface ValidationObject<S> {
@@ -21,8 +22,6 @@ export interface ValidationObject<S> {
     validateAll: ValidateAll<S>;
     validateCustom: ValidateCustom;
     validateIfTrue: ValidateIfTrue<S>;
-    validateOnBlur: ValidateOnBlur<S>;
-    validateOnChange: ValidateOnChange<S>;
     validationErrors: string[];
     validationState: ValidationState;
 }

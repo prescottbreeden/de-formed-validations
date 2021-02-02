@@ -11,23 +11,23 @@ const schema: ValidationSchema<TestSchema> = {
   name: [
     {
       errorMessage: 'Name is required.',
-      validation: (val: string) => val.length > 0,
+      validation: (state: any) => state.name.length > 0,
     },
     {
       errorMessage: 'Cannot be bob.',
-      validation: (val: string) => val !== 'bob',
+      validation: (state: any) => state.name !== 'bob',
     },
     {
       errorMessage: 'Must be dingo.',
-      validation: (val: string, state: any) => {
-        return state.dingo ? val === 'dingo' : true;
+      validation: (state: any) => {
+        return state.dingo ? state.name === 'dingo' : true;
       },
     },
   ],
   age: [
     {
       errorMessage: 'Must be 18.',
-      validation: (val: number) => val >= 18,
+      validation: (state: any) => state.age >= 18,
     },
   ],
 };
@@ -69,8 +69,6 @@ describe('useValidation tests', () => {
     expect(typeof v.validate).toBe('function');
     expect(typeof v.validateAll).toBe('function');
     expect(typeof v.validateIfTrue).toBe('function');
-    expect(typeof v.validateOnBlur).toBe('function');
-    expect(typeof v.validateOnChange).toBe('function');
     expect(Array.isArray(v.validationErrors)).toBe(true);
     expect(typeof v.validationState).toBe('object');
   });
@@ -91,8 +89,6 @@ describe('useValidation tests', () => {
       'validateAll',
       'validateCustom',
       'validateIfTrue',
-      'validateOnBlur',
-      'validateOnChange',
       '_validationSchema',
       '_validationState',
     ]);
@@ -116,7 +112,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = '';
       const state = defaultState;
-      v.validate(name, value, state);
+      v.validate(state)({ target: { name, value } });
       const output = v.getError('name');
       expect(output).toBe('Name is required.');
     });
@@ -140,7 +136,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = '';
       const state = defaultState;
-      v.validate(name, value, state);
+      v.validate(state)({ target: { name, value } });
       const output = v.getAllErrors('name');
       expect(output).toStrictEqual(['Name is required.']);
     });
@@ -164,7 +160,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = '';
       const state = defaultState;
-      v.validate(name, value, state);
+      v.validate(state)({ target: { name, value } });
       const output = v.getFieldValid('name');
       expect(output).toBe(false);
     });
@@ -180,7 +176,9 @@ describe('useValidation tests', () => {
       let output: boolean;
       const v = new Validation(schema);
       const state = defaultState;
-      output = v.validate('name', 'bob', state);
+      const name = 'name';
+      const value = "bob";
+      output = v.validate(state)({ target: { name, value } });
       expect(v.isValid).toBe(output);
       expect(v.isValid).toBe(false);
     });
@@ -188,8 +186,8 @@ describe('useValidation tests', () => {
     it('changes to true after a failed validation passes', () => {
       const v = new Validation(schema);
       const state = defaultState;
-      v.validate('name', 'bob', state);
-      v.validate('name', 'bob ross', state);
+      v.validate(state)({ target: { name, value: 'bob' } });
+      v.validate(state)({ target: { name, value: 'bob ross' } });
       const output = v.isValid;
       expect(output).toBe(true);
     });
@@ -202,7 +200,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = 'bob';
       const state = defaultState;
-      output = v.validate(name, value, state);
+      output = v.validate(state)({ target: { name, value } });
       expect(typeof output).toBe('boolean');
     });
 
@@ -212,7 +210,7 @@ describe('useValidation tests', () => {
       const name = 'balls' as keyof TestSchema;
       const value = 'bob';
       const state = defaultState;
-      output = v.validate(name, value, state);
+      output = v.validate(state)({ target: { name, value } });
       expect(output).toBe(true);
     });
 
@@ -228,7 +226,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = 'chuck';
       const state = { dingo: true } as TestSchema;
-      v.validate(name, value, state);
+      v.validate(state)({ target: { name, value } });
       expect(v.isValid).toBe(false);
       expect(v.validationState).toStrictEqual(validationState);
     });
@@ -262,8 +260,8 @@ describe('useValidation tests', () => {
       namesAreAllBob: [
         {
           errorMessage: 'Names all have to be bob.',
-          validation: (names: string[]) => {
-            return names.reduce((acc: boolean, name: string) => {
+          validation: (state: any) => {
+            return state.names.reduce((acc: boolean, name: string) => {
               return acc ? name === 'bob' : false;
             }, true);
           },
@@ -272,9 +270,9 @@ describe('useValidation tests', () => {
       namesAreAllDingo: [
         {
           errorMessage: 'Names all have to be dino if dingo is true.',
-          validation: (names: string[], object: any) => {
-            return names.reduce((acc: boolean, name: string) => {
-              if (object.dingo === true) {
+          validation: (state: any) => {
+            return state.names.reduce((acc: boolean, name: string) => {
+              if (state?.object?.dingo === true) {
                 return acc ? name === 'dingo' : false;
               }
               return true;
@@ -287,9 +285,13 @@ describe('useValidation tests', () => {
       const v = new Validation(weirdSchema);
       let output: boolean;
       const validNames = ['bob', 'bob', 'bob'];
+      const state = {
+        ...defaultState,
+        names: validNames
+      }
       output = v.validateCustom([
-        { key: 'namesAreAllBob', value: validNames },
-        { key: 'namesAreAllDingo', value: validNames, state: defaultState },
+        { key: 'namesAreAllBob', value: validNames, state},
+        { key: 'namesAreAllDingo', value: validNames, state},
       ]);
       expect(typeof output).toBe('boolean');
     });
@@ -298,9 +300,13 @@ describe('useValidation tests', () => {
       const v = new Validation(weirdSchema);
       let output: boolean;
       const validNames = ['bob', 'bob', 'bob'];
+      const state = {
+        ...defaultState,
+        names: validNames
+      }
       output = v.validateCustom([
-        { key: 'namesAreAllBob', value: validNames },
-        { key: 'namesAreAllDingo', value: validNames, state: defaultState },
+        { key: 'namesAreAllBob', value: validNames, state},
+        { key: 'namesAreAllDingo', value: validNames, state},
       ]);
       expect(output).toBe(true);
     });
@@ -309,9 +315,13 @@ describe('useValidation tests', () => {
       const v = new Validation(weirdSchema);
       const invalidNames = ['jack', 'bob', 'bob'];
       let output: boolean;
+      const state = {
+        ...defaultState,
+        names: invalidNames
+      }
       output = v.validateCustom([
-        { key: 'namesAreAllBob', value: invalidNames },
-        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState },
+        { key: 'namesAreAllBob', value: invalidNames, state },
+        { key: 'namesAreAllDingo', value: invalidNames, state },
       ]);
       expect(output).toBe(false);
     });
@@ -319,21 +329,25 @@ describe('useValidation tests', () => {
     it('updates validation state', () => {
       const v = new Validation(weirdSchema);
       const invalidNames = ['jack', 'bob', 'bob'];
+      const state = {
+        ...defaultState,
+        names: invalidNames
+      }
       v.validateCustom([
-        { key: 'namesAreAllBob', value: invalidNames },
-        { key: 'namesAreAllDingo', value: invalidNames, state: defaultState },
+        { key: 'namesAreAllBob', value: invalidNames, state },
+        { key: 'namesAreAllDingo', value: invalidNames, state },
       ]);
       expect(v.isValid).toBe(false);
     });
 
-    it('takes an optional object for second argument', () => {
-      const v = new Validation(weirdSchema);
-      const validNames = ['dingo', 'dingo', 'dingo'];
-      v.validateCustom([
-        { key: 'namesAreAllDingo', value: validNames, state: { dingo: true } },
-      ]);
-      expect(v.isValid).toBe(true);
-    });
+    // it('takes an optional object for second argument', () => {
+    //   const v = new Validation(weirdSchema);
+    //   const validNames = ['dingo', 'dingo', 'dingo'];
+    //   v.validateCustom([
+    //     { key: 'namesAreAllDingo', value: validNames, state: { dingo: true } },
+    //   ]);
+    //   expect(v.isValid).toBe(true);
+    // });
   });
 
   describe('validateIfTrue', () => {
@@ -343,7 +357,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = 'bob';
       const state = defaultState;
-      output = v.validateIfTrue(name, value, state);
+      output = v.validateIfTrue(state)({ target: { name, value } });
       expect(typeof output).toBe('boolean');
     });
 
@@ -353,7 +367,7 @@ describe('useValidation tests', () => {
       const value = 'bob';
       const state = defaultState;
       let output: boolean;
-      output = v.validateIfTrue(name, value, state);
+      output = v.validateIfTrue(state)({ target: { name, value } });
       expect(output).toBe(true);
     });
 
@@ -365,7 +379,7 @@ describe('useValidation tests', () => {
       const name = 'name';
       const value = 'chuck';
       const state = { dingo: true } as TestSchema;
-      v.validateIfTrue(name, value, state);
+      v.validateIfTrue(state)({ target: { name, value } });
       expect(v.isValid).toBe(true);
       expect(v.validationState).toStrictEqual(validationState);
     });
@@ -377,65 +391,11 @@ describe('useValidation tests', () => {
       const validationState = {
         ...mockValidationState,
       };
-      v.validate('name', 'bob', state);
+      v.validate(state)({ target: { name: 'name', value: 'bob' } });
       expect(v.isValid).toBe(false);
-      v.validateIfTrue('name', 'jack', state);
+      v.validateIfTrue(state)({ target: { name: 'name', value: 'jack' } });
       expect(v.isValid).toBe(true);
       expect(v.validationState).toStrictEqual(validationState);
-    });
-  });
-
-  describe('validateOnBlur', () => {
-    it('returns a new function', () => {
-      const v = new Validation(schema);
-      const state = defaultState;
-      const handleBlur = v.validateOnBlur(state);
-      expect(typeof handleBlur).toBe('function');
-    });
-
-    it('updates the valdiation state when called', () => {
-      const v = new Validation(schema);
-      const state = defaultState;
-      const handleBlur = v.validateOnBlur(state);
-      const event = {
-        target: {
-          name: 'name',
-          value: 'bob',
-          dispatchEvent: new Event('blur'),
-        },
-      };
-      handleBlur(event as any);
-      expect(v.isValid).toBe(false);
-    });
-  });
-
-  describe('validateOnChange', () => {
-    it('returns a new function', () => {
-      const v = new Validation(schema);
-      const state = defaultState;
-      const onChange = () => 'bob ross';
-      const handleChange = v.validateOnChange(onChange, state);
-      expect(typeof handleChange).toBe('function');
-    });
-
-    it('updates the valdiation state if true and returns event', () => {
-      const v = new Validation(schema);
-      const state = defaultState;
-      v.validate('name', 'bob', defaultState);
-      expect(v.isValid).toBe(false);
-      const onChange = () => 'bob ross';
-      const handleChange = v.validateOnChange(onChange, state);
-      const event = {
-        target: {
-          name: 'name',
-          value: 'jack',
-          dispatchEvent: new Event('change'),
-        },
-      };
-      let output: any;
-      output = handleChange(event as any);
-      expect(v.isValid).toBe(true);
-      expect(output).toBe('bob ross');
     });
   });
 

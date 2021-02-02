@@ -27,17 +27,16 @@ class Validation {
             }, true, keys);
             return valid;
         };
-        this.runAllValidators = (property, value, state) => {
-            const localState = state ? state : {};
-            const runValidator = utilities_1.compose((func) => func(value, localState), utilities_1.prop('validation'));
-            const bools = ramda_1.map(runValidator, utilities_1.prop(property, this._validationSchema));
+        this.runAllValidators = (name, value, state) => {
+            const runValidator = utilities_1.compose((func) => func({ ...state, [name]: value }), utilities_1.prop('validation'));
+            const bools = ramda_1.map(runValidator, utilities_1.prop(name, this._validationSchema));
             const allValidationsValid = utilities_1.all(bools);
             const errors = bools.reduce((acc, curr, idx) => {
-                const errorOf = utilities_1.compose(utilities_1.prop('errorMessage'), utilities_1.prop(idx), utilities_1.prop(property));
+                const errorOf = utilities_1.compose(utilities_1.prop('errorMessage'), utilities_1.prop(idx), utilities_1.prop(name));
                 return curr ? acc : [...acc, errorOf(this._validationSchema)];
             }, []);
             return {
-                [property]: {
+                [name]: {
                     isValid: allValidationsValid,
                     errors: allValidationsValid ? [] : errors,
                 },
@@ -63,22 +62,20 @@ class Validation {
             }
             return true;
         };
-        this.validate = (property, value, state) => {
-            if (property in this._validationSchema) {
-                const validations = this.runAllValidators(property, value, state);
-                this._validationState = {
-                    ...this._validationState,
-                    ...validations,
-                };
-                return utilities_1.isPropertyValid(property, validations);
+        this.validate = (state) => (event) => {
+            const { target: { name, value } } = event;
+            if (name in this._validationSchema) {
+                const validations = this.runAllValidators(name, value, state);
+                this._validationState = ramda_1.mergeRight(this._validationState, validations);
+                return utilities_1.isPropertyValid(name, validations);
             }
             return true;
         };
-        this.validateAll = (state, props = Object.keys(this._validationSchema)) => {
+        this.validateAll = (state, props) => {
             const newState = ramda_1.reduce((acc, property) => {
                 const r = this.runAllValidators(property, utilities_1.prop(property, state), state);
-                return { ...acc, ...r };
-            }, {}, props);
+                return ramda_1.mergeRight(acc, r);
+            }, {}, props !== null && props !== void 0 ? props : Object.keys(this._validationSchema));
             this._validationState = newState;
             return this.allValid(newState);
         };
@@ -97,29 +94,17 @@ class Validation {
             this._validationState = state;
             return this.allValid(state);
         };
-        this.validateIfTrue = (property, value, state) => {
-            if (property in this._validationSchema) {
-                const validations = this.runAllValidators(property, value, state);
-                if (utilities_1.isPropertyValid(property, validations)) {
+        this.validateIfTrue = (state) => (event) => {
+            const { target: { name, value } } = event;
+            if (name in this._validationSchema) {
+                const validations = this.runAllValidators(name, value, state);
+                if (utilities_1.isPropertyValid(name, validations)) {
                     const updated = { ...this._validationState, ...validations };
                     this._validationState = updated;
                 }
-                return utilities_1.isPropertyValid(property, validations);
+                return utilities_1.isPropertyValid(name, validations);
             }
             return true;
-        };
-        this.validateOnBlur = (state) => {
-            return (event) => {
-                const { value, name } = event.target;
-                this.validate(name, value, state);
-            };
-        };
-        this.validateOnChange = (onChange, state) => {
-            return (event) => {
-                const { value, name } = event.target;
-                this.validateIfTrue(name, value, state);
-                return onChange(event);
-            };
         };
         this._validationSchema = props;
         this._validationState = this.createValidationsState(props);
@@ -140,4 +125,5 @@ class Validation {
     }
 }
 exports.Validation = Validation;
+;
 //# sourceMappingURL=validation.js.map
