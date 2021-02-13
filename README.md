@@ -1,5 +1,7 @@
 # De-Formed Validations
 
+# This package has been deprecated - please use @de-formed/react-validations for the latest version
+
 De-Formed Validations is a robust and unopinionated API to manage form and data validations in JavaScript and React. With only a handful of properties to learn, de-formed maintains its own internal state with simple function calls so that you can design your architecture the way you want to.
 
 ## Why Use De-Formed?
